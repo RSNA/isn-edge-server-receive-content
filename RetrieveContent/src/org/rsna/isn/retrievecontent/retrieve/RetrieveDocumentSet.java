@@ -24,21 +24,18 @@
 package org.rsna.isn.retrievecontent.retrieve;
 
 import java.io.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.FileNotFoundException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Properties;
-import javax.jws.soap.SOAPBinding;
-import javax.xml.ws.BindingType;
+import org.apache.log4j.Logger;
+//import javax.jws.soap.SOAPBinding;
+//import javax.xml.ws.BindingType;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.io.DicomInputStream;
 
-@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
-@BindingType(value = javax.xml.ws.soap.SOAPBinding.SOAP11HTTP_MTOM_BINDING)
+//@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
+//@BindingType(value = javax.xml.ws.soap.SOAPBinding.SOAP11HTTP_MTOM_BINDING)
 
 /**
  * Read KOS file.
@@ -49,97 +46,61 @@ import org.dcm4che2.io.DicomInputStream;
  *
  */
 public class RetrieveDocumentSet {
-    public int NumOfDocs;
+
+    private static final Logger logger = Logger.getLogger(RetrieveDocumentSet.class);
+    public int NumOfDocs = 0;
     private ArrayList<String> docList;
     private List<DocumentInfo> docInfoList;
-    Properties props = new Properties();
-    private static LogProvider lp;
-    private String logPropsPath;
-    private String r2Logger;
-    private int docsreturn = 0;
-    private String RegistryURL;
-    private String RepositoryUniqueID;
-    private String AssigningAuthorityUniversalId;
-    private String AssigningAuthorityUniversalIdType;
-    private String RepositoryURL;
-    private String HomeCommunityId;
-    private String tempdir;
-    private String imagedir;
-    private String reportdir;
     private String source;
     private String destination;
+    private String patientPath;
+    private String reportPath;
 
     public RetrieveDocumentSet() throws FileNotFoundException {
-        try {
-            props.load(new FileInputStream(Configuration.PROPERTYFILE));
-            
-            RegistryURL = props.getProperty("RegistryURL");
-            RepositoryURL = props.getProperty("RepositoryURL");
-            RepositoryUniqueID = props.getProperty("RepositoryUniqueID");
-            AssigningAuthorityUniversalId = props.getProperty("AssigningAuthorityUniversalId");
-            AssigningAuthorityUniversalIdType = props.getProperty("AssigningAuthorityUniversalIdType");            
-            HomeCommunityId = props.getProperty("HomeCommunityId");
-
-            tempdir = props.getProperty("tempdir");
-            source = tempdir;
-            destination = props.getProperty("imagedir");
-            reportdir = props.getProperty("reportdir");
-
-            logPropsPath = props.getProperty("logPropsPath");
-            r2Logger = props.getProperty("r2Logger");
-            LogProvider.init(logPropsPath, r2Logger);
-            lp = LogProvider.getInstance();            
-
-            NumOfDocs = 0;
-        } catch (Exception e) {
-            lp.getLog().debug(e.getMessage());
-       }
+        source = Configuration.tempdir;
+        destination = Configuration.imagedir;
+        patientPath="";
     }
-    
+
     public List<DocumentInfo> RetrieveDocuments(String RsnaPatientID) throws IOException, Exception {
         docList = new ArrayList<String>();
         docInfoList = new ArrayList<DocumentInfo>();
         NumOfDocs = 0;
-        
-        try {            
-            lp.getLog().debug("Logging started iti18");
 
+        try {
             if (RsnaPatientID.length() < 1) {
-                lp.getLog().debug("Input XML values can not be null!");
                 throw new Exception("A value is required for all XML fields");
             }
-            
+
             //Get DocumentUniqueIDs
             ITI18 query18 = new ITI18();
-            ITI18DataType input18 = new ITI18DataType();            
-            
-            input18.setRegistryURL(RegistryURL.trim());
-            System.out.println(RegistryURL);
-            input18.setRepositoryUniqueID(RepositoryUniqueID.trim());
-            input18.setAssigningAuthorityUniversalId(AssigningAuthorityUniversalId.trim());
-            input18.setAssigningAuthorityUniversalIdType(AssigningAuthorityUniversalIdType.trim());
-            input18.setPatientID(RsnaPatientID);            
+            ITI18DataType input18 = new ITI18DataType();
+
+            input18.setRegistryURL(Configuration.RegistryURL);
+            input18.setRepositoryUniqueID(Configuration.RepositoryUniqueID);
+            input18.setAssigningAuthorityUniversalId(Configuration.AssigningAuthorityUniversalId.trim());
+            input18.setAssigningAuthorityUniversalIdType(Configuration.AssigningAuthorityUniversalIdType.trim());
+            input18.setPatientID(RsnaPatientID);
 
             docList = query18.queryDocuments(input18);
             if (docList == null) {
-                lp.getLog().debug("No documents returned for ID " + RsnaPatientID);
                 throw new Exception("No documents returned for ID " + RsnaPatientID);
             }
-            
+
             //Retrieve documents by DocumentUniqueIDs (KOS&Report)
             ITI43 query43 = new ITI43();
             ITI43DataType input43 = new ITI43DataType();
-            
-            input43.setRepositoryURL(RepositoryURL.trim());
-            input43.setRepositoryUniqueId(RepositoryUniqueID.trim());
-            input43.setHomeCommunityId(HomeCommunityId.trim());
-            File dirTemp = new File(tempdir);
+
+            input43.setRepositoryURL(Configuration.RepositoryURL.trim());
+            input43.setRepositoryUniqueId(Configuration.RepositoryUniqueID.trim());
+            input43.setHomeCommunityId(Configuration.HomeCommunityId.trim());
+            File dirTemp = new File(Configuration.tempdir);
             input43.setDownloadDIR(dirTemp.getAbsolutePath().toString());
 
             Iterator<String> itr = docList.iterator();
             while (itr.hasNext()) {
                 String element = itr.next();
-                lp.getLog().debug("getting document with id " + element);
+                logger.info("getting document with id " + element);
                 input43.setDocumentUniqueId(element);
                 dirTemp = query43.queryDocuments(input43, RsnaPatientID);
                 String downloadedFile = dirTemp.getAbsolutePath().toString();
@@ -149,39 +110,34 @@ public class RetrieveDocumentSet {
                         if (docInfo != null) {
                             docInfoList.add(docInfo);
                         }
-                        lp.getLog().debug("retuning  document " + element + "for token " + RsnaPatientID);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                     NumOfDocs++;
                 }
             }
         } catch (Exception e) {
-            lp.getLog().debug(e.getMessage());
+            logger.error(e.getMessage());
        }
         return docInfoList;
     }
-    
+
     private DocumentInfo ProcessFile(String fileName, String rsnaPatientID, String documentUniqueID) throws IOException, Exception {
         DocumentInfo docInfo = null;
-        String newFname;
+        String newFname = "";
         String mimeType;
 
         File fs = new File(fileName);
-        File fd = new File(destination);        
+        File fd = new File(destination);
 
         //  check if source directory is there
         if (!fs.exists()) {
-            System.out.println("Source Directory or File doesn't exist:" + fs);
-            lp.getLog().error("CopyDocumentFiles: Source Directory or File doesn't exist " + fs);
-            throw new Exception("CopyDocumentFiles: Source Directory or File doesn't exist " + fs);
+            throw new Exception("Source Directory or File doesn't exist " + fs);
         } else if (!fd.exists()) {
-            System.out.println("Destination Directory or File doesn't exist:" + fd);
-            lp.getLog().info("Destination Directory or File doesn't exist:" + fd);
-            throw new Exception("CopyDocumentFiles: Destination Directory or File doesn't exist " + fd);
+            throw new Exception("Destination Directory or File doesn't exist " + fd);
         // create destination Directory
         } else if (fs.exists() && fd.exists()) {
-                           
+
             //decide KOS or Report file
             DicomObject object = null;
             DicomInputStream dis = null;
@@ -198,16 +154,14 @@ public class RetrieveDocumentSet {
                 dis.close();
                 ReadKOS readKOS = new ReadKOS();
                 docInfo = readKOS.listHeader(object, rsnaPatientID, documentUniqueID);
-                
+
                 //Create patient folder if not exist
-                String patientName = docInfo.getPatientName();
-                String patientPath = destination + File.separatorChar + patientName;
+                patientPath = destination + File.separatorChar + docInfo.getPatientName();
                 File patientDir = new File(patientPath);
                 if (!patientDir.exists()) {
                     if (patientDir.mkdir()) {
-                        lp.getLog().info("Created patient folder " + patientPath);
+                        logger.info("Created patient folder " + patientPath);
                     } else {
-                        lp.getLog().error("Error on creating patient folder " + patientPath);
                         throw new Exception("Error on creating patient folder " + patientPath);
                     }
                 }
@@ -218,41 +172,75 @@ public class RetrieveDocumentSet {
                 File studyDir = new File(studyPath);
                 if (!studyDir.exists()) {
                     if (studyDir.mkdir()) {
-                        lp.getLog().info("Created study folder " + studyPath);
+                        logger.info("Created study folder " + studyPath);
                     } else {
-                        lp.getLog().error("Error on creating study folder " + studyPath);
                         throw new Exception("Error on creating study folder " + studyPath);
                     }
                 }
 
                 //Store KOS File
-                String kosFilePath   = studyPath + File.separatorChar ;
-                newFname =  kosFilePath + File.separatorChar + "KOS.dcm";
-                fd = new File(newFname);
-                if (fd.exists()) {
-                    lp.getLog().error(newFname + " already exists!");
+                //String kosFilePath   = studyPath + File.separatorChar ;
+                String kosFilePath   = patientPath + File.separatorChar + "kos";
+                File kosDir = new File(kosFilePath);
+                if (!kosDir.exists()) {
+                    kosDir.mkdir();
                 }
-                else {
-                    CopyFile(fs, fd);
-                    lp.getLog().info("Moved " + fileName + "to directory " + studyPath);
+                newFname =  kosFilePath + File.separatorChar + "KOS" + studyInstanceUID + ".dcm";
+                fd = new File(newFname);
+                CopyFile(fs, fd);
+                logger.info("Moved " + fileName + "to directory " + studyPath);
+                if (!fs.delete()) {
+                    logger.error("Error in deleting KOS file");
+                }
 
-                    if (!fs.delete()) {
-                        lp.getLog().error("Error in deleting KOS file");
+                reportPath = patientPath + File.separatorChar + "report";
+                File reportDir = new File(reportPath);
+                if (!reportDir.exists()) {
+                    reportDir.mkdir();
+                }
+                //move the previous report file to patient folder
+                //it happens when report file was arrived prior KOS file
+                File repDir = new File(Configuration.reportdir);
+                String[] repFiles = repDir.list();
+                if (repFiles != null) {
+                    for (int i=0; i<repFiles.length; i++) {
+                        fs = new File(Configuration.reportdir + File.separatorChar + repFiles[i]);
+                        newFname = reportPath + File.separatorChar + fs.getName() + ".txt";
+                        fd = new File(newFname);
+                        try {
+                            CopyFile(fs, fd);
+                            if (!fs.delete()) {
+                                logger.error("Error in deleting report file");
+                            }
+                        } catch (Exception e) {
+                            logger.error("Error" + e.getMessage());
+                        }
                     }
                 }
+
             }
             else {
                 //Store report file
-                newFname = reportdir + File.separatorChar + fs.getName() + ".txt";
+                if (patientPath.isEmpty()) {
+                    newFname = Configuration.reportdir + File.separatorChar + fs.getName() + ".txt";
+                }
+                else {
+                    reportPath = patientPath + File.separatorChar + "report";
+                    File reportDir = new File(reportPath);
+                    if (!reportDir.exists()) {
+                        reportDir.mkdir();
+                    }
+                    newFname = reportPath + File.separatorChar + fs.getName() + ".txt";
+                }
+
                 fd = new File(newFname);
                 try {
                     CopyFile(fs, fd);
+                    if (!fs.delete()) {
+                        logger.error("Error in deleting report file");
+                    }
                 } catch (Exception e) {
-                    lp.getLog().error("Error" + e.getMessage());
-                }
-
-                if (!fs.delete()) {
-                    lp.getLog().error("Error in deleting report file");
+                    logger.error("Error" + e.getMessage());
                 }
             }
         }

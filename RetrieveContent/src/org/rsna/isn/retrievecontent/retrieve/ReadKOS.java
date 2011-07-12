@@ -24,6 +24,7 @@
 
 package org.rsna.isn.retrievecontent.retrieve;
 
+import org.apache.log4j.Logger;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -44,6 +45,7 @@ import org.dcm4che2.util.TagUtils;
  *
  */
 public class ReadKOS {
+    private static final Logger logger = Logger.getLogger(ReadKOS.class);
     private DocumentInfo docInfo = new DocumentInfo();
     private String transferSyntaxUID = "";
     private String savedTagName = "";
@@ -97,7 +99,7 @@ public class ReadKOS {
                                     if (tagVR1.equals("SQ")) {
                                         if (element1.hasItems()) {
                                             int num1 = element1.countItems();
-                                            System.out.println(tagAddr1 +" ["+  tagVR1 +"] "+ tagName1 + " size= " + num1);
+                                            //System.out.println(tagAddr1 +" ["+  tagVR1 +"] "+ tagName1 + " size= " + num1);
                                             for (int j=0; j<num1; j++) {
                                                 DicomObject object2 = element1.getDicomObject(j);
                                                 Iterator<DicomElement> iter2 = object2.datasetIterator();
@@ -114,7 +116,7 @@ public class ReadKOS {
                                                         if (tagVR2.equals("SQ")) {
                                                             if (element2.hasItems()) {
                                                                 int num2 = element2.countItems();
-                                                                System.out.println(tagAddr2 +" ["+  tagVR2 +"] "+ tagName2 + " size= " + num2);
+                                                                //System.out.println(tagAddr2 +" ["+  tagVR2 +"] "+ tagName2 + " size= " + num2);
                                                                 for (int k=0; k<num2; k++) {
                                                                     DicomObject object3 = element2.getDicomObject(k);
                                                                     Iterator<DicomElement> iter3 = object3.datasetIterator();
@@ -131,7 +133,7 @@ public class ReadKOS {
                                                                             if (tagVR3.equals("SQ")) {
                                                                                 if (element3.hasItems()) {
                                                                                     int num3 = element3.countItems();
-                                                                                    System.out.println(tagAddr +" ["+  tagVR3 +"] "+ tagName3 + " size= " + num3);
+                                                                                    //System.out.println(tagAddr +" ["+  tagVR3 +"] "+ tagName3 + " size= " + num3);
                                                                                     for (int l=0; l<num3; l++) {
                                                                                         DicomObject object4 = element3.getDicomObject(l);
                                                                                         Iterator<DicomElement> iter4 = object4.datasetIterator();
@@ -147,9 +149,9 @@ public class ReadKOS {
                                                                                                 String tagVR4 = object4.vrOf(tag4).toString();
                                                                                                 String tagValue4 = object4.getString(tag4);
                                                                                                 addDocInfo(tagAddr4, tagValue4);
-                                                                                                System.out.println(tagAddr4 +" ["+ tagVR4 +"] "+ tagName4 +" ["+ tagValue4+"]");
+                                                                                                //System.out.println(tagAddr4 +" ["+ tagVR4 +"] "+ tagName4 +" ["+ tagValue4+"]");
                                                                                             } catch (Exception e) {
-                                                                                                e.printStackTrace();
+                                                                                                logger.error(e.getMessage());
                                                                                             }
                                                                                         }
                                                                                     }
@@ -157,10 +159,10 @@ public class ReadKOS {
                                                                             } else {
                                                                                 String tagValue3 = object3.getString(tag3);
                                                                                 addDocInfo(tagAddr3, tagValue3);
-                                                                                System.out.println(tagAddr3 +" ["+ tagVR3 +"] "+ tagName3 +" ["+ tagValue3+"]");
+                                                                                //System.out.println(tagAddr3 +" ["+ tagVR3 +"] "+ tagName3 +" ["+ tagValue3+"]");
                                                                             }
                                                                         } catch (Exception e) {
-                                                                            e.printStackTrace();
+                                                                            logger.error(e.getMessage());
                                                                         }
                                                                     }
                                                                 }
@@ -168,10 +170,10 @@ public class ReadKOS {
                                                         } else {
                                                             String tagValue2 = object2.getString(tag2);
                                                             addDocInfo(tagAddr2, tagValue2);
-                                                            System.out.println(tagAddr2 +" ["+ tagVR2 +"] "+ tagName2 +" ["+ tagValue2 +"]");
+                                                            //System.out.println(tagAddr2 +" ["+ tagVR2 +"] "+ tagName2 +" ["+ tagValue2 +"]");
                                                         }
                                                     } catch (Exception e) {
-                                                        e.printStackTrace();
+                                                        logger.error(e.getMessage());
                                                     }
                                                 }
                                             }
@@ -179,10 +181,10 @@ public class ReadKOS {
                                     } else {
                                         String tagValue1 = object1.getString(tag1);
                                         addDocInfo(tagAddr1, tagValue1);
-                                       System.out.println(tagAddr1 +" ["+ tagVR1 +"] "+ tagName1 +" ["+ tagValue1+"]");
+                                        //System.out.println(tagAddr1 +" ["+ tagVR1 +"] "+ tagName1 +" ["+ tagValue1+"]");
                                     }
                                 } catch (Exception e) {
-                                    e.printStackTrace();
+                                    logger.error(e.getMessage());
                                 }
                             }
                         }
@@ -190,10 +192,10 @@ public class ReadKOS {
                 } else {
                     String tagValue = object.getString(tag);
                     addDocInfo(tagAddr, tagValue);
-                    System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
+                    //System.out.println(tagAddr +" ["+ tagVR +"] "+ tagName +" ["+ tagValue+"]");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage());
             }
         }
         return docInfo;
@@ -227,7 +229,7 @@ public class ReadKOS {
             }
         } else if (tagAddr.equals("(0010,0010)")) {
             docInfo.setPatientName(tagValue);
-        } 
+        }
         //else if (tagAddr.equals("(0008,1150)")) {
             //sopClassUID = tagValue;
             //modality = SQLQueries.GetModality(sopClassUID);

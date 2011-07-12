@@ -25,6 +25,9 @@
 package org.rsna.isn.retrievecontent.retrieve;
 
 import java.sql.Timestamp;
+import java.util.Properties;
+import java.io.File;
+import org.apache.log4j.PropertyConfigurator;
 
 /**
  * Method selects value of a configuration key from configuration table
@@ -39,14 +42,63 @@ import java.sql.Timestamp;
  */
 public class Configuration {
 
-    public static final String PROPERTYFILE="c:/rsna/config/imageretrieve.properties";
-
+    public final static String configDir = "c:/rsna/config/";
+    public final static String getRad69URL = "";
     private String key ;
     private String value ;
     private java.sql.Timestamp modified_date;
 
+    private static Properties props = new Properties();
+    public static String RegistryURL;
+    public static String RepositoryURL;
+    public static String Rad69URL;
+    public static String RepositoryUniqueID;
+    public static String AssigningAuthorityUniversalId;
+    public static String AssigningAuthorityUniversalIdType;
+    public static String HomeCommunityId;
+    public static String tempdir;
+    public static String imagedir;
+    public static String reportdir;
+
     public Configuration() {
 
+    }
+
+    public Configuration(String key, String value, Timestamp modified_date) {
+        this.key = key;
+        this.value = value;
+        this.modified_date = modified_date;
+    }
+
+    public synchronized static void init(){
+        try {
+            props.load(new java.io.FileInputStream(configDir + "imageretrieve.properties"));
+
+            RegistryURL = props.getProperty("RegistryURL");
+            RepositoryURL = props.getProperty("RepositoryURL");
+            Rad69URL = props.getProperty("Rad69URL");
+            RepositoryUniqueID = props.getProperty("RepositoryUniqueID");
+            AssigningAuthorityUniversalId = props.getProperty("AssigningAuthorityUniversalId");
+            AssigningAuthorityUniversalIdType = props.getProperty("AssigningAuthorityUniversalIdType");
+            HomeCommunityId = props.getProperty("HomeCommunityId");
+
+            tempdir = props.getProperty("tempdir");
+            imagedir = props.getProperty("imagedir");
+            reportdir = props.getProperty("reportdir");
+
+            String logPropsPath = props.getProperty("logPropsPath");
+            PropertyConfigurator.configure(logPropsPath);
+
+            File keystore = new File(configDir, "keystore.jks");
+            System.setProperty("javax.net.ssl.keyStore", keystore.getPath());
+            System.setProperty("javax.net.ssl.keyStorePassword", "edge1234");
+
+            File truststore = new File(configDir, "truststore.jks");
+            System.setProperty("javax.net.ssl.trustStore", truststore.getPath());
+            System.setProperty("javax.net.ssl.trustStorePassword", "edge1234");
+        } catch (Exception ex) {
+            throw new ExceptionInInitializerError(ex);
+       }
     }
 
     public String getKey() {
@@ -67,12 +119,6 @@ public class Configuration {
 
     public String getValue() {
         return value;
-    }
-
-    public Configuration(String key, String value, Timestamp modified_date) {
-        this.key = key;
-        this.value = value;
-        this.modified_date = modified_date;
     }
 
     public void setValue(String value) {

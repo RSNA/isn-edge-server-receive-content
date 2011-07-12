@@ -4,15 +4,13 @@
  */
 package org.rsna.isn.retrievecontent.retrieve;
 
-import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Properties;
 import org.apache.axis2.AxisFault;
 import org.openhealthtools.ihe.common.ebxml._3._0.rim.ObjectRefType;
-
 import org.openhealthtools.ihe.common.hl7v2.CX;
 import org.openhealthtools.ihe.common.hl7v2.Hl7v2Factory;
 import org.openhealthtools.ihe.xds.consumer.B_Consumer;
@@ -34,19 +32,13 @@ import org.eclipse.ohf.ihe.atna.agent.AtnaAgentFactory;
  */
 public class ITI18 {
 
+    private static final Logger logger = Logger.getLogger(ITI18.class);
     private XDSQueryResponseType responseDetails;
     private ArrayList<String> docList;
     private  DateTimeRange[] creationTimeRange = null;
     private HashMap hm;
-    Properties props = new Properties();
-    private static LogProvider lp;
-    private String logPropsPath;
-    private String r2Logger;
 
-    public   ArrayList  queryDocuments(ITI18DataType input) throws MalformedStoredQueryException, AxisFault, URISyntaxException, Exception {
-   
-        lp = LogProvider.getInstance();
-        lp.getLog().error("Logging started. queryDocuments");
+    public ArrayList queryDocuments(ITI18DataType input) throws MalformedStoredQueryException, AxisFault, URISyntaxException, Exception {
 
         try {
             String registryURL  = input.getRegistryURL();
@@ -58,12 +50,11 @@ public class ITI18 {
             String creationstartDate = input.getCreationTimeStartDate();
             String creationEndDate = input.getCreationTimeEndDate();
 
-              
             URI registryURI = null;
             try {
                 registryURI = new URI(registryURL);
             } catch (URISyntaxException e) {
-                lp.getLog().error(e.getMessage());
+                logger.error("iti18 - " + e.getMessage());
             }
 
             B_Consumer c = new B_Consumer(registryURI);
@@ -86,18 +77,18 @@ public class ITI18 {
             try {
                 query = new FindDocumentsQuery(patientId, null, null, null, null, null, null, null, null, status);
             } catch (Exception e) {
-                lp.getLog().error(e.getMessage());
+                logger.error("iti18 - " + e.getMessage());
             }
-      
+
             XDSQueryResponseType responseList = null;
 
             try {
                 responseList = c.invokeStoredQuery(query, true);
             } catch (Exception e) {
-                lp.getLog().debug(e.getMessage());
+                logger.error("iti18 - " + e.getMessage());
             }
             if (responseList == null || responseList.getReferences().size() == 0) {
-                throw  new Exception("NO DOCUMENTS FOUND " +   "for "  +    patientID) ;
+                throw new Exception("NO DOCUMENTS FOUND " + "for " + patientID);
             }
 
             int numOfDocs = responseList.getReferences().size();
@@ -111,10 +102,10 @@ public class ITI18 {
                 GetDocumentsQuery docsQuery = new GetDocumentsQuery(docReferences, true);
                 response = c.invokeStoredQuery(docsQuery, false);
             } catch (MalformedStoredQueryException e) {
-                lp.getLog().debug(e.getMessage());
+                logger.error("iti18 - " + e.getMessage());
                 return null;
             } catch (Exception e) {
-                lp.getLog().debug(e.getMessage());
+                logger.error("iti18 - " + e.getMessage());
                 return null;
             }
             int numOfResponses = response.getDocumentEntryResponses().size();
@@ -128,7 +119,7 @@ public class ITI18 {
                 docList.add(id) ;
             }
         } catch (Exception e) {
-            lp.getLog().error(e.getMessage());
+            logger.error("iti18 - " + e.getMessage());
         }
 
         return docList;

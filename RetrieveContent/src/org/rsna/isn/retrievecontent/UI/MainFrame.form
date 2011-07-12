@@ -126,9 +126,6 @@
           </Constraints>
         </Component>
         <Component class="javax.swing.JTextField" name="txtExamID">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jjpwx3tj"/>
-          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
               <JLayeredPaneConstraints x="120" y="150" width="223" height="-1" layer="0" position="-1"/>
@@ -152,9 +149,6 @@
           </Constraints>
         </Component>
         <Component class="javax.swing.JTextField" name="txtDOB">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="19741212"/>
-          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
               <JLayeredPaneConstraints x="120" y="180" width="110" height="-1" layer="0" position="-1"/>
@@ -222,7 +216,7 @@
         <Component class="javax.swing.JLabel" name="lblMsg">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="e6" green="e6" red="e6" type="rgb"/>
+              <Color blue="0" green="99" red="ff" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="  "/>
             <Property name="autoscrolls" type="boolean" value="true"/>
@@ -245,7 +239,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout$JLayeredPaneConstraintsDescription">
-              <JLayeredPaneConstraints x="0" y="0" width="-1" height="610" layer="0" position="-1"/>
+              <JLayeredPaneConstraints x="0" y="0" width="1010" height="610" layer="0" position="-1"/>
             </Constraint>
           </Constraints>
         </Component>

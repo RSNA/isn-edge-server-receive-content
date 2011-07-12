@@ -24,12 +24,10 @@
 
 package org.rsna.isn.retrievecontent.UI;
 
-import java.io.*;
 import java.util.*;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.*;
+import java.awt.Color;
 import org.rsna.isn.retrievecontent.retrieve.*;
 
 /**
@@ -41,7 +39,6 @@ import org.rsna.isn.retrievecontent.retrieve.*;
  */
 public class MainFrame extends javax.swing.JFrame {
 
-    private static final Logger logger = Logger.getLogger(MainFrame.class);
     private List<DocumentInfo> docInfoList;
     private String tokenID;
     Properties props = new Properties();
@@ -53,14 +50,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         btnRetrieve.setEnabled(false);
         lblProgress.setVisible(false);
-
-        try {
-            props.load(new java.io.FileInputStream(Configuration.PROPERTYFILE));
-            PropertyConfigurator.configure(props.getProperty("logPropsPath"));
-
-        } catch (Exception ex) {
-            lblMsg.setText(ex.getMessage());
-        }
     }
 
     /** This method is called from within the constructor to
@@ -100,7 +89,7 @@ public class MainFrame extends javax.swing.JFrame {
         lblProgress.setBounds(380, 230, 250, 80);
         jLayeredPane1.add(lblProgress, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLabel3.setFont(new java.awt.Font("Simplified Arabic", 1, 18)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Simplified Arabic", 1, 18));
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Retrieve Studies from Image Sharing Clearing House");
         jLabel3.setBounds(30, 80, 480, 30);
@@ -129,8 +118,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLayeredPane1.add(lblExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtPassword.setBounds(120, 210, 110, 20);
         jLayeredPane1.add(txtPassword, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        txtExamID.setText("jjpwx3tj");
         txtExamID.setBounds(120, 150, 223, 20);
         jLayeredPane1.add(txtExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -139,8 +126,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1.setText("Date of Birth:");
         jLabel1.setBounds(30, 180, 80, 14);
         jLayeredPane1.add(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        txtDOB.setText("19741212");
         txtDOB.setBounds(120, 180, 110, 20);
         jLayeredPane1.add(txtDOB, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -179,7 +164,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane2.setBounds(10, 350, 980, 170);
         jLayeredPane1.add(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        lblMsg.setForeground(new java.awt.Color(230, 230, 230));
+        lblMsg.setForeground(new java.awt.Color(255, 153, 0));
         lblMsg.setText("  ");
         lblMsg.setAutoscrolls(true);
         lblMsg.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
@@ -188,7 +173,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/rsna/isn/retrievecontent/UI/RSNA-Image-Share-bg.jpg"))); // NOI18N
-        jLabel5.setBounds(0, 0, 1004, 610);
+        jLabel5.setBounds(0, 0, 1010, 610);
         jLayeredPane1.add(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -206,14 +191,12 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowActionPerformed
-        // TODO add your handling code here:
         lblMsg.setText(null);
         try
         {
-            logger.info("input ExamID:" + txtExamID.getText());
             String examID=txtExamID.getText().replace("-","").toLowerCase();
             tokenID=TransHash.gen(examID, txtDOB.getText(), txtPassword.getText());
-            lblMsg.setText("Querying study for ID:" + tokenID);            
+            lblMsg.setText("Querying study for exam : " + txtExamID.getText());
 
             (new ShowThread()).start();
         } catch (Exception e) {
@@ -226,20 +209,21 @@ public class MainFrame extends javax.swing.JFrame {
         String msg="";
         try
         {
-            CustomModel model = new CustomModel();
+            CustomTableModel model = new CustomTableModel();
             tbStudies.setModel(model);
+            CustomTableCellRenderer render=new CustomTableCellRenderer();
+            tbStudies.setDefaultRenderer(Object.class, render);
 
-            javax.swing.table.TableColumnModel cModel = tbStudies.getColumnModel();
+            TableColumnModel cModel = tbStudies.getColumnModel();
             model.addColumn("Select");
             model.addColumn("PatientName");
             model.addColumn("StudyUID");
             model.addColumn("Study Description");
-            model.addColumn("Modality");
             model.addColumn("StudyDate");
 
             JCheckBox checkBox = new javax.swing.JCheckBox();
             tbStudies.getColumn("Select").setCellEditor(new DefaultCellEditor(checkBox));
-            
+
             cModel.getColumn(0).setMaxWidth(40);
             cModel.getColumn(0).setMinWidth(10);
             cModel.getColumn(0).setWidth(40);
@@ -248,11 +232,7 @@ public class MainFrame extends javax.swing.JFrame {
             cModel.getColumn(4).setMinWidth(50);
             cModel.getColumn(4).setWidth(100);
             cModel.getColumn(4).setPreferredWidth(100);
-            cModel.getColumn(5).setMaxWidth(100);
-            cModel.getColumn(5).setMinWidth(60);
-            cModel.getColumn(5).setWidth(100);
-            cModel.getColumn(5).setPreferredWidth(100);
-            
+
             RetrieveDocumentSet act = new RetrieveDocumentSet();
             //docList = act.retrievedocs(tokenID).getDocument();
             docInfoList = act.RetrieveDocuments(tokenID);
@@ -272,9 +252,9 @@ public class MainFrame extends javax.swing.JFrame {
                             docInfo.getPatientName(),
                             docInfo.getStudyInstanceUID(),
                             docInfo.getStudyDescription(),
-                            docInfo.getModality(),
                             docInfo.getStudyDate()});
                     }
+                    model.rowColours=model.initRowColour(docInfoList.size());
                 }
                 else
                 {
@@ -284,7 +264,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
             else
             {
-                lblMsg.setText("No document was found for " + tokenID);
+                lblMsg.setText("No document was found for " + txtExamID.getText());
             }
         } catch (Exception e) {
             lblMsg.setText(e.getMessage());
@@ -325,7 +305,8 @@ public class MainFrame extends javax.swing.JFrame {
             lblProgress.setVisible(true);
 
             try {
-                int rowcount = tbStudies.getModel().getRowCount();
+                CustomTableModel model = (CustomTableModel)tbStudies.getModel();
+                int rowcount = model.getRowCount();
                 for(int row = 0; row < rowcount; row++){
                     Boolean selected = (Boolean)tbStudies.getModel().getValueAt(row, 0);
                     if (selected) {
@@ -336,6 +317,8 @@ public class MainFrame extends javax.swing.JFrame {
                             if (studyUID == docInfo.getStudyInstanceUID()) {
                                 lblMsg.setText("Retrieving study [" + docInfo.getStudyInstanceUID() + "]...");
                                 numOfDocs += RetrieveDocuments.RetrieveStudy(docInfo);
+                                model.setRowColour(i, Color.LIGHT_GRAY);
+
                                 break;
                             }
                         }
@@ -344,7 +327,7 @@ public class MainFrame extends javax.swing.JFrame {
             } catch (Exception e) {
                 lblMsg.setText("Error for  " + tokenID + " is " + e.getMessage());
             }
-            
+
             btnRetrieve.setEnabled(true);
             btnShow.setEnabled(true);
             lblProgress.setVisible(false);
@@ -360,13 +343,8 @@ public class MainFrame extends javax.swing.JFrame {
     * @param args the command line arguments
     */
     public static void main(String args[]) {
-        File keystore=new File("c:/rsna/config/keystore.jks");
-        System.setProperty("javax.net.ssl.keyStore", keystore.getPath());
-        System.setProperty("javax.net.ssl.keyStorePassword", "edge1234");
+        Configuration.init();
 
-        File truststore=new File("c:/rsna/config/truststore.jks");
-        System.setProperty("javax.net.ssl.trustStore", truststore.getPath());
-        System.setProperty("javax.net.ssl.trustStorePassword", "edge1234");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainFrame().setVisible(true);
@@ -380,12 +358,27 @@ public class MainFrame extends javax.swing.JFrame {
         txtPassword.setText(null);
     }
 
-    class CustomModel extends DefaultTableModel {
-        public CustomModel() {
+    static class CustomTableModel extends DefaultTableModel {
+        public CustomTableModel() {
             super();
         }
-        public CustomModel(Object[][] data, Object[] columnNames) {
+        public CustomTableModel(Object[][] data, Object[] columnNames) {
             super(data, columnNames);
+        }
+        public ArrayList<Color> rowColours = new ArrayList<Color>();
+        public ArrayList<Color> initRowColour(int rowCount){
+            ArrayList<Color> list = new ArrayList<Color>();
+            for (int i=0; i< rowCount; i++){
+                list.add(Color.WHITE);
+            }
+            return list;
+        }
+        public void setRowColour(int row, Color c) {
+            rowColours.set(row, c);
+            fireTableRowsUpdated(row, row);
+        }
+        public Color getRowColour(int row) {
+            return rowColours.get(row);
         }
         public Class getColumnClass(int col) {
             Vector v = (Vector)dataVector.elementAt(0);
@@ -395,6 +388,17 @@ public class MainFrame extends javax.swing.JFrame {
             //Class columnClass = getColumnClass(col);
             //return columnClass != ImageIcon.class && columnClass != Date.class;
             return col == 0;
+        }
+    }
+
+    static class CustomTableCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public java.awt.Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            CustomTableModel model = (CustomTableModel) table.getModel();
+            java.awt.Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            c.setBackground(model.getRowColour(row));
+
+            return c;
         }
     }
 
