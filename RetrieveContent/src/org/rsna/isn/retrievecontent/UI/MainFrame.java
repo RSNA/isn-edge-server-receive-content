@@ -24,6 +24,7 @@
 
 package org.rsna.isn.retrievecontent.UI;
 
+import java.io.File;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -48,6 +49,18 @@ public class MainFrame extends javax.swing.JFrame {
         initComponents();
         this.setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage("RSNA-Image-Share-icon.jpg"));
 
+        File tmpDir = new File(Configuration.tempdir);
+        if (!tmpDir.exists()) {
+            tmpDir.mkdir();
+        }
+        File reportDir = new File(Configuration.reportdir);
+        if (!reportDir.exists()) {
+            reportDir.mkdir();
+        }
+        File imgDir = new File(Configuration.imagedir);
+        if (!imgDir.exists()) {
+            imgDir.mkdir();
+        }
         btnRetrieve.setEnabled(false);
         lblProgress.setVisible(false);
     }
