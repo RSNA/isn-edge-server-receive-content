@@ -49,7 +49,7 @@ public class ITI18 {
             String codedMetadataType = input.getCodedMetadataType();
             String creationstartDate = input.getCreationTimeStartDate();
             String creationEndDate = input.getCreationTimeEndDate();
-
+              
             URI registryURI = null;
             try {
                 registryURI = new URI(registryURL);
@@ -79,7 +79,7 @@ public class ITI18 {
             } catch (Exception e) {
                 logger.error("iti18 - " + e.getMessage());
             }
-
+      
             XDSQueryResponseType responseList = null;
 
             try {

@@ -43,7 +43,7 @@ public class ITI43 {
         String  repositoryUniqueId = input.getRepositoryUniqueId();
         String documentUniqueId  = input.getDocumentUniqueId();
         String downloadDIR = input.getDownloadDIR();
-
+       
         URI repositoryURI = null;
         try {
             repositoryURI = new URI(repositoryURL);
@@ -60,11 +60,11 @@ public class ITI43 {
         patientId.setAssigningAuthorityUniversalId(assigningAuthorityUniversalId);
         patientId.setAssigningAuthorityUniversalIdType(assigningAuthorityUniversalIdType);
         patientId.setIdNumber(patiendID);
-
+       
         URI XDS_B_REPOSITORY_URI = null;
 
         c.getRepositoryMap().put(repositoryUniqueId, repositoryURI);
-
+        
         RetrieveDocumentSetRequestType retrieveRequest = org.openhealthtools.ihe.xds.consumer.retrieve.RetrieveFactory.eINSTANCE.createRetrieveDocumentSetRequestType();
         DocumentRequestType documentRequest = org.openhealthtools.ihe.xds.consumer.retrieve.RetrieveFactory.eINSTANCE.createDocumentRequestType();
         documentRequest.setRepositoryUniqueId(repositoryUniqueId);
@@ -85,7 +85,7 @@ public class ITI43 {
             document = (Document)documents.get(0);
             //System.out.println("First document returned: " + document.toString());
 	}
-
+        
         File importDir = new File(downloadDIR);
 	File inputDir = null;
 	try {
@@ -99,7 +99,7 @@ public class ITI43 {
 	destFile = importDir;
 	OutputStream out = new FileOutputStream(destFile);
 	InputStream documentStream = document.getDocumentData();
-
+	      
 	byte[] buf = new byte[1024];
 	int len;
 	try {
@@ -112,6 +112,13 @@ public class ITI43 {
             logger.error("iti43 - " + e.getMessage());
 	}
 
-        return destFile;
+        return destFile;		
     }
 }
+
+
+
+      
+
+
+

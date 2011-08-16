@@ -229,7 +229,7 @@ public class ReadKOS {
             }
         } else if (tagAddr.equals("(0010,0010)")) {
             docInfo.setPatientName(tagValue);
-        }
+        } 
         //else if (tagAddr.equals("(0008,1150)")) {
             //sopClassUID = tagValue;
             //modality = SQLQueries.GetModality(sopClassUID);

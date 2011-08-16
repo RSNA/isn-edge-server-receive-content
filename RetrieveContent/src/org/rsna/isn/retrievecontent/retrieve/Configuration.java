@@ -47,7 +47,7 @@ public class Configuration {
     private String key ;
     private String value ;
     private java.sql.Timestamp modified_date;
-
+    
     private static Properties props = new Properties();
     public static String RegistryURL;
     public static String RepositoryURL;
@@ -61,7 +61,7 @@ public class Configuration {
     public static String reportdir;
 
     public Configuration() {
-
+        
     }
 
     public Configuration(String key, String value, Timestamp modified_date) {
@@ -73,13 +73,13 @@ public class Configuration {
     public synchronized static void init(){
         try {
             props.load(new java.io.FileInputStream(configDir + "imageretrieve.properties"));
-
+            
             RegistryURL = props.getProperty("RegistryURL");
             RepositoryURL = props.getProperty("RepositoryURL");
             Rad69URL = props.getProperty("Rad69URL");
             RepositoryUniqueID = props.getProperty("RepositoryUniqueID");
             AssigningAuthorityUniversalId = props.getProperty("AssigningAuthorityUniversalId");
-            AssigningAuthorityUniversalIdType = props.getProperty("AssigningAuthorityUniversalIdType");
+            AssigningAuthorityUniversalIdType = props.getProperty("AssigningAuthorityUniversalIdType");            
             HomeCommunityId = props.getProperty("HomeCommunityId");
 
             tempdir = props.getProperty("tempdir");

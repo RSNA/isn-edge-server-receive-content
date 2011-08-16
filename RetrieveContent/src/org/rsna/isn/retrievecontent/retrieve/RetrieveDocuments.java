@@ -87,14 +87,14 @@ public class RetrieveDocuments {
         RegistryErrorList errList;
 
         try {
-            rsnaID = input.getRsnaID();
+            rsnaID = input.getRsnaID();            
             studyInstanceUID = input.getStudyInstanceUID();
             transferSyntaxUID = input.getTransferSyntaxUID();
-
+                        
             TransferSyntaxUIDList transferList = new TransferSyntaxUIDList();
             List<String> transferSyntaxUIDs = transferList.getTransferSyntaxUID();
-            transferSyntaxUIDs.add(transferSyntaxUID);
-
+            transferSyntaxUIDs.add(transferSyntaxUID);            
+              
             ArrayList<String> seriesInstanceUIDList = input.getSeriesInstanceUIDList();
             if (seriesInstanceUIDList != null) {
                 //Generate Rad69 request meta data dsRequest per Series
@@ -127,7 +127,7 @@ public class RetrieveDocuments {
                             docRequest.setRepositoryUniqueId(Configuration.RepositoryUniqueID);
                             documentRequestList.add(docRequest);
                         }
-
+                        
                         //Generate Rad69 response meta data dsResponse
                         dsResponse = new RetrieveDocumentSetResponseType();
                         try {

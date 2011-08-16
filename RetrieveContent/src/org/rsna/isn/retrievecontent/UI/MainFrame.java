@@ -76,19 +76,19 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
         lblProgress = new javax.swing.JLabel();
+        lblMsg = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        btnRetrieve = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         lblExamID = new javax.swing.JLabel();
-        txtPassword = new javax.swing.JPasswordField();
+        btnRetrieve = new javax.swing.JButton();
         txtExamID = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        txtDOB = new javax.swing.JTextField();
+        txtPassword = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
+        txtDOB = new javax.swing.JTextField();
         btnShow = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbStudies = new javax.swing.JTable();
-        lblMsg = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -102,21 +102,18 @@ public class MainFrame extends javax.swing.JFrame {
         lblProgress.setBounds(380, 230, 250, 80);
         jLayeredPane1.add(lblProgress, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
+        lblMsg.setForeground(new java.awt.Color(255, 204, 0));
+        lblMsg.setText("  ");
+        lblMsg.setAutoscrolls(true);
+        lblMsg.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        lblMsg.setBounds(10, 300, 980, 40);
+        jLayeredPane1.add(lblMsg, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         jLabel3.setFont(new java.awt.Font("Simplified Arabic", 1, 18));
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Retrieve Studies from Image Sharing Clearing House");
         jLabel3.setBounds(30, 80, 480, 30);
         jLayeredPane1.add(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        btnRetrieve.setText("Retrieve Studies");
-        btnRetrieve.setToolTipText("Retrieve studies from ClearingHouse");
-        btnRetrieve.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRetrieveActionPerformed(evt);
-            }
-        });
-        btnRetrieve.setBounds(310, 260, 130, 23);
-        jLayeredPane1.add(btnRetrieve, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10));
         jLabel4.setForeground(new java.awt.Color(230, 230, 230));
@@ -129,8 +126,18 @@ public class MainFrame extends javax.swing.JFrame {
         lblExamID.setText("ExamID: ");
         lblExamID.setBounds(30, 150, 50, 14);
         jLayeredPane1.add(lblExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        txtPassword.setBounds(120, 210, 110, 20);
-        jLayeredPane1.add(txtPassword, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        btnRetrieve.setText("Retrieve Studies");
+        btnRetrieve.setToolTipText("Retrieve studies from ClearingHouse");
+        btnRetrieve.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRetrieveActionPerformed(evt);
+            }
+        });
+        btnRetrieve.setBounds(310, 260, 130, 23);
+        jLayeredPane1.add(btnRetrieve, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        txtExamID.setText("jjpwx3tj");
         txtExamID.setBounds(120, 150, 223, 20);
         jLayeredPane1.add(txtExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -139,14 +146,18 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1.setText("Date of Birth:");
         jLabel1.setBounds(30, 180, 80, 14);
         jLayeredPane1.add(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        txtDOB.setBounds(120, 180, 110, 20);
-        jLayeredPane1.add(txtDOB, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        txtPassword.setBounds(120, 210, 110, 20);
+        jLayeredPane1.add(txtPassword, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel2.setForeground(new java.awt.Color(230, 230, 230));
         jLabel2.setText("Password:");
         jLabel2.setBounds(30, 210, 70, 14);
         jLayeredPane1.add(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        txtDOB.setText("19741212");
+        txtDOB.setBounds(120, 180, 110, 20);
+        jLayeredPane1.add(txtDOB, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         btnShow.setText("Show Studies");
         btnShow.setToolTipText("Query studies from ClearingHouse");
@@ -177,16 +188,9 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane2.setBounds(10, 350, 980, 170);
         jLayeredPane1.add(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        lblMsg.setForeground(new java.awt.Color(255, 153, 0));
-        lblMsg.setText("  ");
-        lblMsg.setAutoscrolls(true);
-        lblMsg.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        lblMsg.setBounds(10, 300, 980, 40);
-        jLayeredPane1.add(lblMsg, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/rsna/isn/retrievecontent/UI/RSNA-Image-Share-bg.jpg"))); // NOI18N
-        jLabel5.setBounds(0, 0, 1010, 610);
+        jLabel5.setBounds(0, 0, 1004, 610);
         jLayeredPane1.add(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -204,13 +208,16 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowActionPerformed
+        // TODO add your handling code here:
         lblMsg.setText(null);
         try
-        {
+        {            
             String examID=txtExamID.getText().replace("-","").toLowerCase();
             tokenID=TransHash.gen(examID, txtDOB.getText(), txtPassword.getText());
-            lblMsg.setText("Querying study for exam : " + txtExamID.getText());
-
+            //System.out.println(tokenID);
+            //lblMsg.setText("Querying study for exam : " + tokenID);
+            lblMsg.setText("Querying study for exam : " + txtExamID.getText());          
+            
             (new ShowThread()).start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,7 +243,7 @@ public class MainFrame extends javax.swing.JFrame {
 
             JCheckBox checkBox = new javax.swing.JCheckBox();
             tbStudies.getColumn("Select").setCellEditor(new DefaultCellEditor(checkBox));
-
+            
             cModel.getColumn(0).setMaxWidth(40);
             cModel.getColumn(0).setMinWidth(10);
             cModel.getColumn(0).setWidth(40);
@@ -334,13 +341,13 @@ public class MainFrame extends javax.swing.JFrame {
 
                                 break;
                             }
-                        }
+                        }                        
                     }
                 }
             } catch (Exception e) {
                 lblMsg.setText("Error for  " + tokenID + " is " + e.getMessage());
             }
-
+            
             btnRetrieve.setEnabled(true);
             btnShow.setEnabled(true);
             lblProgress.setVisible(false);
@@ -357,7 +364,13 @@ public class MainFrame extends javax.swing.JFrame {
     */
     public static void main(String args[]) {
         Configuration.init();
-
+//        File keystore=new File("c:/rsna/config/keystore.jks");
+//        System.setProperty("javax.net.ssl.keyStore", keystore.getPath());
+//        System.setProperty("javax.net.ssl.keyStorePassword", "edge1234");
+//
+//        File truststore=new File("c:/rsna/config/truststore.jks");
+//        System.setProperty("javax.net.ssl.trustStore", truststore.getPath());
+//        System.setProperty("javax.net.ssl.trustStorePassword", "edge1234");
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainFrame().setVisible(true);
@@ -365,7 +378,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
 
-    private void ClearInput() {
+    private void ClearInput() { 
         txtExamID.setText(null);
         txtDOB.setText(null);
         txtPassword.setText(null);
@@ -414,6 +427,7 @@ public class MainFrame extends javax.swing.JFrame {
             return c;
         }
     }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRetrieve;

@@ -61,36 +61,36 @@ public class RetrieveDocumentSet {
         destination = Configuration.imagedir;
         patientPath="";
     }
-
+    
     public List<DocumentInfo> RetrieveDocuments(String RsnaPatientID) throws IOException, Exception {
         docList = new ArrayList<String>();
         docInfoList = new ArrayList<DocumentInfo>();
         NumOfDocs = 0;
-
-        try {
+        
+        try {            
             if (RsnaPatientID.length() < 1) {
                 throw new Exception("A value is required for all XML fields");
             }
-
+            
             //Get DocumentUniqueIDs
             ITI18 query18 = new ITI18();
-            ITI18DataType input18 = new ITI18DataType();
-
+            ITI18DataType input18 = new ITI18DataType();            
+            
             input18.setRegistryURL(Configuration.RegistryURL);
             input18.setRepositoryUniqueID(Configuration.RepositoryUniqueID);
             input18.setAssigningAuthorityUniversalId(Configuration.AssigningAuthorityUniversalId.trim());
             input18.setAssigningAuthorityUniversalIdType(Configuration.AssigningAuthorityUniversalIdType.trim());
-            input18.setPatientID(RsnaPatientID);
+            input18.setPatientID(RsnaPatientID);            
 
             docList = query18.queryDocuments(input18);
             if (docList == null) {
                 throw new Exception("No documents returned for ID " + RsnaPatientID);
             }
-
+            
             //Retrieve documents by DocumentUniqueIDs (KOS&Report)
             ITI43 query43 = new ITI43();
             ITI43DataType input43 = new ITI43DataType();
-
+            
             input43.setRepositoryURL(Configuration.RepositoryURL.trim());
             input43.setRepositoryUniqueId(Configuration.RepositoryUniqueID.trim());
             input43.setHomeCommunityId(Configuration.HomeCommunityId.trim());
@@ -121,14 +121,14 @@ public class RetrieveDocumentSet {
        }
         return docInfoList;
     }
-
+    
     private DocumentInfo ProcessFile(String fileName, String rsnaPatientID, String documentUniqueID) throws IOException, Exception {
         DocumentInfo docInfo = null;
         String newFname = "";
         String mimeType;
 
         File fs = new File(fileName);
-        File fd = new File(destination);
+        File fd = new File(destination);        
 
         //  check if source directory is there
         if (!fs.exists()) {
@@ -137,7 +137,7 @@ public class RetrieveDocumentSet {
             throw new Exception("Destination Directory or File doesn't exist " + fd);
         // create destination Directory
         } else if (fs.exists() && fd.exists()) {
-
+                           
             //decide KOS or Report file
             DicomObject object = null;
             DicomInputStream dis = null;
@@ -154,7 +154,7 @@ public class RetrieveDocumentSet {
                 dis.close();
                 ReadKOS readKOS = new ReadKOS();
                 docInfo = readKOS.listHeader(object, rsnaPatientID, documentUniqueID);
-
+                
                 //Create patient folder if not exist
                 patientPath = destination + File.separatorChar + docInfo.getPatientName();
                 File patientDir = new File(patientPath);
@@ -232,7 +232,7 @@ public class RetrieveDocumentSet {
                     }
                     newFname = reportPath + File.separatorChar + fs.getName() + ".txt";
                 }
-
+                
                 fd = new File(newFname);
                 try {
                     CopyFile(fs, fd);
@@ -241,7 +241,7 @@ public class RetrieveDocumentSet {
                     }
                 } catch (Exception e) {
                     logger.error("Error" + e.getMessage());
-                }
+                }                
             }
         }
         return docInfo;
