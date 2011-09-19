@@ -42,7 +42,7 @@ import org.apache.log4j.PropertyConfigurator;
  */
 public class Configuration {
 
-    public final static String configDir = "c:/rsna/config/";
+    public final static String configfile = "imageretrieve.properties";
     public final static String getRad69URL = "";
     private String key ;
     private String value ;
@@ -72,7 +72,7 @@ public class Configuration {
 
     public synchronized static void init(){
         try {
-            props.load(new java.io.FileInputStream(configDir + "imageretrieve.properties"));
+            props.load(new java.io.FileInputStream(configfile));
             
             RegistryURL = props.getProperty("RegistryURL");
             RepositoryURL = props.getProperty("RepositoryURL");
@@ -89,13 +89,15 @@ public class Configuration {
             String logPropsPath = props.getProperty("logPropsPath");
             PropertyConfigurator.configure(logPropsPath);
 
-            File keystore = new File(configDir, "keystore.jks");
-            System.setProperty("javax.net.ssl.keyStore", keystore.getPath());
-            System.setProperty("javax.net.ssl.keyStorePassword", "edge1234");
+            String keystorefile = props.getProperty("keystorefile");
+            String keystorepassword = props.getProperty("keystorepassword");
+            System.setProperty("javax.net.ssl.keyStore", keystorefile);
+            System.setProperty("javax.net.ssl.keyStorePassword", keystorepassword);
 
-            File truststore = new File(configDir, "truststore.jks");
-            System.setProperty("javax.net.ssl.trustStore", truststore.getPath());
-            System.setProperty("javax.net.ssl.trustStorePassword", "edge1234");
+            String truststorefile = props.getProperty("truststorefile");
+            String truststorepassword = props.getProperty("truststorepassword");
+            System.setProperty("javax.net.ssl.trustStore", truststorefile);
+            System.setProperty("javax.net.ssl.trustStorePassword", truststorepassword);
         } catch (Exception ex) {
             throw new ExceptionInInitializerError(ex);
        }

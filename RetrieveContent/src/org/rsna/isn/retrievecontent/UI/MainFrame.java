@@ -136,8 +136,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
         btnRetrieve.setBounds(310, 260, 130, 23);
         jLayeredPane1.add(btnRetrieve, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        txtExamID.setText("jjpwx3tj");
         txtExamID.setBounds(120, 150, 223, 20);
         jLayeredPane1.add(txtExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -154,8 +152,6 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel2.setText("Password:");
         jLabel2.setBounds(30, 210, 70, 14);
         jLayeredPane1.add(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        txtDOB.setText("19741212");
         txtDOB.setBounds(120, 180, 110, 20);
         jLayeredPane1.add(txtDOB, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -364,13 +360,7 @@ public class MainFrame extends javax.swing.JFrame {
     */
     public static void main(String args[]) {
         Configuration.init();
-//        File keystore=new File("c:/rsna/config/keystore.jks");
-//        System.setProperty("javax.net.ssl.keyStore", keystore.getPath());
-//        System.setProperty("javax.net.ssl.keyStorePassword", "edge1234");
-//
-//        File truststore=new File("c:/rsna/config/truststore.jks");
-//        System.setProperty("javax.net.ssl.trustStore", truststore.getPath());
-//        System.setProperty("javax.net.ssl.trustStorePassword", "edge1234");
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainFrame().setVisible(true);
