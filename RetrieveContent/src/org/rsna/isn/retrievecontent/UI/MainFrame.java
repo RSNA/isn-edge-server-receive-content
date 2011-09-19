@@ -118,13 +118,13 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10));
         jLabel4.setForeground(new java.awt.Color(230, 230, 230));
         jLabel4.setText("(Format: YYYYMMDD)");
-        jLabel4.setBounds(240, 180, 120, 20);
+        jLabel4.setBounds(260, 180, 180, 20);
         jLayeredPane1.add(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         lblExamID.setFont(new java.awt.Font("Tahoma", 1, 11));
         lblExamID.setForeground(new java.awt.Color(230, 230, 230));
         lblExamID.setText("ExamID: ");
-        lblExamID.setBounds(30, 150, 50, 14);
+        lblExamID.setBounds(30, 150, 110, 14);
         jLayeredPane1.add(lblExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         btnRetrieve.setText("Retrieve Studies");
@@ -134,25 +134,25 @@ public class MainFrame extends javax.swing.JFrame {
                 btnRetrieveActionPerformed(evt);
             }
         });
-        btnRetrieve.setBounds(310, 260, 130, 23);
+        btnRetrieve.setBounds(260, 260, 170, 23);
         jLayeredPane1.add(btnRetrieve, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        txtExamID.setBounds(120, 150, 223, 20);
+        txtExamID.setBounds(140, 150, 223, 20);
         jLayeredPane1.add(txtExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setForeground(new java.awt.Color(230, 230, 230));
         jLabel1.setText("Date of Birth:");
-        jLabel1.setBounds(30, 180, 80, 14);
+        jLabel1.setBounds(30, 180, 110, 14);
         jLayeredPane1.add(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        txtPassword.setBounds(120, 210, 110, 20);
+        txtPassword.setBounds(140, 210, 110, 20);
         jLayeredPane1.add(txtPassword, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel2.setForeground(new java.awt.Color(230, 230, 230));
         jLabel2.setText("Password:");
-        jLabel2.setBounds(30, 210, 70, 14);
+        jLabel2.setBounds(30, 210, 110, 14);
         jLayeredPane1.add(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        txtDOB.setBounds(120, 180, 110, 20);
+        txtDOB.setBounds(140, 180, 110, 20);
         jLayeredPane1.add(txtDOB, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         btnShow.setText("Show Studies");
@@ -162,7 +162,7 @@ public class MainFrame extends javax.swing.JFrame {
                 btnShowActionPerformed(evt);
             }
         });
-        btnShow.setBounds(30, 260, 130, 23);
+        btnShow.setBounds(30, 260, 170, 23);
         jLayeredPane1.add(btnShow, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         tbStudies.setModel(new javax.swing.table.DefaultTableModel(
