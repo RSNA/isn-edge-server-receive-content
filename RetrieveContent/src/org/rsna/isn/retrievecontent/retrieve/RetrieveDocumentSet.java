@@ -27,7 +27,6 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Properties;
 import org.apache.log4j.Logger;
 //import javax.jws.soap.SOAPBinding;
 //import javax.xml.ws.BindingType;
@@ -94,6 +93,10 @@ public class RetrieveDocumentSet {
             input43.setRepositoryURL(Configuration.RepositoryURL.trim());
             input43.setRepositoryUniqueId(Configuration.RepositoryUniqueID.trim());
             input43.setHomeCommunityId(Configuration.HomeCommunityId.trim());
+            input43.setAssigningAuthorityUniversalId(Configuration.AssigningAuthorityUniversalId.trim());
+            input43.setAssigningAuthorityUniversalIdType(Configuration.AssigningAuthorityUniversalIdType.trim());
+            input43.setPatientID(RsnaPatientID);
+
             File dirTemp = new File(Configuration.tempdir);
             input43.setDownloadDIR(dirTemp.getAbsolutePath().toString());
 
@@ -217,7 +220,6 @@ public class RetrieveDocumentSet {
                         }
                     }
                 }
-
             }
             else {
                 //Store report file

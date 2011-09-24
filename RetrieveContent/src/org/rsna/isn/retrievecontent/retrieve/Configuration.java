@@ -26,7 +26,6 @@ package org.rsna.isn.retrievecontent.retrieve;
 
 import java.sql.Timestamp;
 import java.util.Properties;
-import java.io.File;
 import org.apache.log4j.PropertyConfigurator;
 
 /**

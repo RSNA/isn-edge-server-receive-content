@@ -17,9 +17,8 @@ import org.openhealthtools.ihe.xds.consumer.B_Consumer;
 import org.openhealthtools.ihe.xds.consumer.retrieve.DocumentRequestType;
 import org.openhealthtools.ihe.xds.consumer.retrieve.RetrieveDocumentSetRequestType;
 import org.openhealthtools.ihe.xds.consumer.storedquery.MalformedStoredQueryException;
-import org.openhealthtools.ihe.xds.document.Document;
-//import org.openhealthtools.ihe.xds.response.XDSQueryResponseType;
-import org.openhealthtools.ihe.xds.response.XDSResponseType;
+import org.openhealthtools.ihe.xds.document.XDSDocument;
+import org.openhealthtools.ihe.xds.response.XDSRetrieveResponseType;
 import org.eclipse.ohf.ihe.atna.agent.AtnaAgentFactory;
 
 /**
@@ -32,7 +31,7 @@ public class ITI43 {
     //private XDSQueryResponseType responseDetails;
     //private ArrayList<String> docList;
     private File destFile;
-    private Document document;
+    private XDSDocument document;
 
     public File queryDocuments(ITI43DataType input, String rsnaPatiendID ) throws MalformedStoredQueryException, AxisFault, URISyntaxException, FileNotFoundException, IOException {
 
@@ -60,30 +59,27 @@ public class ITI43 {
         patientId.setAssigningAuthorityUniversalId(assigningAuthorityUniversalId);
         patientId.setAssigningAuthorityUniversalIdType(assigningAuthorityUniversalIdType);
         patientId.setIdNumber(patiendID);
-       
-        URI XDS_B_REPOSITORY_URI = null;
 
         c.getRepositoryMap().put(repositoryUniqueId, repositoryURI);
         
         RetrieveDocumentSetRequestType retrieveRequest = org.openhealthtools.ihe.xds.consumer.retrieve.RetrieveFactory.eINSTANCE.createRetrieveDocumentSetRequestType();
         DocumentRequestType documentRequest = org.openhealthtools.ihe.xds.consumer.retrieve.RetrieveFactory.eINSTANCE.createDocumentRequestType();
         documentRequest.setRepositoryUniqueId(repositoryUniqueId);
-  //    documentRequest.setHomeCommunityId(HomeCommunityId);
         documentRequest.setDocumentUniqueId(documentUniqueId);
 
         retrieveRequest.getDocumentRequest().add(documentRequest);
 	List documents = new ArrayList();
-	XDSResponseType response = null;
+	XDSRetrieveResponseType response = null;
 	try {
-            response = c.retrieveDocumentSet(retrieveRequest, documents,null);
+            response = c.retrieveDocumentSet(retrieveRequest,patientId);
+            documents = response.getAttachments();
 	} catch (Exception e) {
             logger.error("iti43 - " + e.getMessage());
             return null;
 	}
 
         if(documents.size() > 0){
-            document = (Document)documents.get(0);
-            //System.out.println("First document returned: " + document.toString());
+            document = (XDSDocument)documents.get(0);
 	}
         
         File importDir = new File(downloadDIR);
@@ -98,7 +94,7 @@ public class ITI43 {
 	inputDir.delete();
 	destFile = importDir;
 	OutputStream out = new FileOutputStream(destFile);
-	InputStream documentStream = document.getDocumentData();
+	InputStream documentStream = document.getStream();
 	      
 	byte[] buf = new byte[1024];
 	int len;
@@ -115,10 +111,3 @@ public class ITI43 {
         return destFile;		
     }
 }
-
-
-
-      
-
-
-
