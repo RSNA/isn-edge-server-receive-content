@@ -31,8 +31,8 @@ public class ImagingDocumentSourceService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("https://clearinghouse.lifeimage.com/ImagingDocumentSource_Service?wsdl");
-            //url = new URL(Configuration.Rad69URL);
+            //url = new URL("https://clearinghouse.lifeimage.com/ImagingDocumentSource_Service?wsdl");
+            url = new URL(Configuration.Rad69URL);
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
