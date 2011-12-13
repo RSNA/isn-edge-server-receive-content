@@ -204,14 +204,12 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnShowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowActionPerformed
-        // TODO add your handling code here:
+        
         lblMsg.setText(null);
         try
         {            
             String examID=txtExamID.getText().replace("-","").toLowerCase();
             tokenID=TransHash.gen(examID, txtDOB.getText(), txtPassword.getText());
-            //System.out.println(tokenID);
-            //lblMsg.setText("Querying study for exam : " + tokenID);
             lblMsg.setText("Querying study for exam : " + txtExamID.getText());          
             
             (new ShowThread()).start();
@@ -263,12 +261,21 @@ public class MainFrame extends javax.swing.JFrame {
                     for (int i=0; i<docInfoList.size(); i++)
                     {
                         DocumentInfo docInfo=docInfoList.get(i);
+                        String patientName = "UNKNOWN";
+                        String studyDesc = "UNKNOWN";
+                        String studyDate = "UNKNOWN";
+                        if (docInfo.getPatientName() != null)
+                            patientName = docInfo.getPatientName();
+                        if (docInfo.getStudyDescription() != null)
+                            studyDesc = docInfo.getStudyDescription();
+                        if (docInfo.getStudyDate() != null)
+                            studyDate = docInfo.getStudyDate();
                         model.addRow(new Object[]{
                             new Boolean(true),
-                            docInfo.getPatientName(),
+                            patientName,
                             docInfo.getStudyInstanceUID(),
-                            docInfo.getStudyDescription(),
-                            docInfo.getStudyDate()});
+                            studyDesc,
+                            studyDate});
                     }
                     model.rowColours=model.initRowColour(docInfoList.size());
                 }

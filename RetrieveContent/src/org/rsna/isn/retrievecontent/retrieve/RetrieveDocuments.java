@@ -47,9 +47,9 @@ import org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType.
 /**
  * Retrieve image.
  *
- * @version @author
- * 1.0.0    oyesanyf
- * 1.0.0    Wendy Zhu
+ * @version @author         Notes
+ *          oyesanyf
+ * 1.0.0    Wendy Zhu       Retrieve images by series
  *
  */
 public class RetrieveDocuments {
@@ -157,7 +157,7 @@ public class RetrieveDocuments {
                         logger.info("Number of images retuened for " + rsnaID + " for studyInstanceUID " + studyInstanceUID + " is " + numOfDocs);
 
                         documentResponse = new DocumentResponse();
-                        String imagePath = Configuration.imagedir  + File.separatorChar + input.getPatientName() + File.separatorChar + studyInstanceUID + File.separatorChar + seriesInstanceUID;
+                        String imagePath = Configuration.imagedir  + File.separatorChar + input.getPatientName() + File.separatorChar + studyInstanceUID;
                         for (int i = 0; i < numOfDocs; i++) {
                             documentResponse = responseList.get(i);
                             //String cID = documentresponse.getHomeCommunityId();
