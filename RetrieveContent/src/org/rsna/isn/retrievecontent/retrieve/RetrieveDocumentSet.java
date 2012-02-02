@@ -28,13 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.log4j.Logger;
-//import javax.jws.soap.SOAPBinding;
-//import javax.xml.ws.BindingType;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.io.DicomInputStream;
-
-//@SOAPBinding(style = SOAPBinding.Style.DOCUMENT, parameterStyle = SOAPBinding.ParameterStyle.WRAPPED)
-//@BindingType(value = javax.xml.ws.soap.SOAPBinding.SOAP11HTTP_MTOM_BINDING)
 
 /**
  * Read KOS file.
@@ -56,8 +51,8 @@ public class RetrieveDocumentSet {
     private String reportPath;
 
     public RetrieveDocumentSet() throws FileNotFoundException {
-        source = Configuration.tempdir;
-        destination = Configuration.imagedir;
+        source = Configuration.getTmpDir().toString();
+        destination = Configuration.getImageDir().toString();
         patientPath="";
     }
     
@@ -97,7 +92,8 @@ public class RetrieveDocumentSet {
             input43.setAssigningAuthorityUniversalIdType(Configuration.AssigningAuthorityUniversalIdType.trim());
             input43.setPatientID(RsnaPatientID);
 
-            File dirTemp = new File(Configuration.tempdir);
+            //File dirTemp = new File(Configuration.tempdir);
+            File dirTemp=Configuration.getTmpDir();
             input43.setDownloadDIR(dirTemp.getAbsolutePath().toString());
 
             Iterator<String> itr = docList.iterator();
@@ -182,7 +178,6 @@ public class RetrieveDocumentSet {
                 }
 
                 //Store KOS File
-                //String kosFilePath   = studyPath + File.separatorChar ;
                 String kosFilePath   = patientPath + File.separatorChar + "kos";
                 File kosDir = new File(kosFilePath);
                 if (!kosDir.exists()) {
@@ -203,11 +198,12 @@ public class RetrieveDocumentSet {
                 }
                 //move the previous report file to patient folder
                 //it happens when report file was arrived prior KOS file
-                File repDir = new File(Configuration.reportdir);
+                File repDir = Configuration.getReportDir();
                 String[] repFiles = repDir.list();
                 if (repFiles != null) {
                     for (int i=0; i<repFiles.length; i++) {
-                        fs = new File(Configuration.reportdir + File.separatorChar + repFiles[i]);
+                        //fs = new File(Configuration.reportdir + File.separatorChar + repFiles[i]);
+                        fs = new File(repDir.toString(),repFiles[i]);
                         newFname = reportPath + File.separatorChar + fs.getName() + ".txt";
                         fd = new File(newFname);
                         try {
@@ -224,7 +220,8 @@ public class RetrieveDocumentSet {
             else {
                 //Store report file
                 if (patientPath.isEmpty()) {
-                    newFname = Configuration.reportdir + File.separatorChar + fs.getName() + ".txt";
+                    //newFname = Configuration.reportdir + File.separatorChar + fs.getName() + ".txt";
+                    newFname = Configuration.getReportDir().toString()+ File.separatorChar + fs.getName() + ".txt";
                 }
                 else {
                     reportPath = patientPath + File.separatorChar + "report";

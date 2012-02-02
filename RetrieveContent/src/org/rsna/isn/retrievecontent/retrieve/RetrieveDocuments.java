@@ -157,7 +157,7 @@ public class RetrieveDocuments {
                         logger.info("Number of images retuened for " + rsnaID + " for studyInstanceUID " + studyInstanceUID + " is " + numOfDocs);
 
                         documentResponse = new DocumentResponse();
-                        String imagePath = Configuration.imagedir  + File.separatorChar + input.getPatientName() + File.separatorChar + studyInstanceUID;
+                        String imagePath = Configuration.getImageDir().toString()  + File.separatorChar + input.getPatientName() + File.separatorChar + studyInstanceUID;
                         for (int i = 0; i < numOfDocs; i++) {
                             documentResponse = responseList.get(i);
                             //String cID = documentresponse.getHomeCommunityId();

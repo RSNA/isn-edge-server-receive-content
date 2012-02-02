@@ -24,11 +24,11 @@
 
 package org.rsna.isn.retrievecontent.UI;
 
-import java.io.File;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.Color;
+import org.apache.log4j.Logger;
 import org.rsna.isn.retrievecontent.retrieve.*;
 
 /**
@@ -40,27 +40,15 @@ import org.rsna.isn.retrievecontent.retrieve.*;
  */
 public class MainFrame extends javax.swing.JFrame {
 
+    private static final Logger logger = Logger.getLogger(MainFrame.class);
     private List<DocumentInfo> docInfoList;
     private String tokenID;
-    Properties props = new Properties();
 
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
         this.setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage("RSNA-Image-Share-icon.jpg"));
 
-        File tmpDir = new File(Configuration.tempdir);
-        if (!tmpDir.exists()) {
-            tmpDir.mkdir();
-        }
-        File reportDir = new File(Configuration.reportdir);
-        if (!reportDir.exists()) {
-            reportDir.mkdir();
-        }
-        File imgDir = new File(Configuration.imagedir);
-        if (!imgDir.exists()) {
-            imgDir.mkdir();
-        }
         btnRetrieve.setEnabled(false);
         lblProgress.setVisible(false);
     }

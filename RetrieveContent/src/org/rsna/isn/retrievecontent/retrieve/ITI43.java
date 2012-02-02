@@ -23,7 +23,7 @@ import org.eclipse.ohf.ihe.atna.agent.AtnaAgentFactory;
 
 /**
  * @author Jaroslaw Krych (stubs), Lawrence Tarbox (OHT implementation)
- *
+ * @author Wendy Zhu (RSNA NIBIB implementation)
  */
 public class ITI43 {
 
