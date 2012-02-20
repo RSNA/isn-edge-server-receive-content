@@ -75,6 +75,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         txtDOB = new javax.swing.JTextField();
         btnShow = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbStudies = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
@@ -100,7 +101,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Simplified Arabic", 1, 18));
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Retrieve Studies from Image Sharing Clearing House");
-        jLabel3.setBounds(30, 80, 480, 30);
+        jLabel3.setBounds(30, 80, 700, 30);
         jLayeredPane1.add(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10));
@@ -153,6 +154,12 @@ public class MainFrame extends javax.swing.JFrame {
         btnShow.setBounds(30, 260, 170, 23);
         jLayeredPane1.add(btnShow, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Version 2.0.1");
+        jLabel6.setBounds(820, 90, 120, 13);
+        jLayeredPane1.add(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         tbStudies.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
@@ -174,7 +181,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/rsna/isn/retrievecontent/UI/RSNA-Image-Share-bg.jpg"))); // NOI18N
-        jLabel5.setBounds(0, 0, 1004, 610);
+        jLabel5.setBounds(0, 0, 1030, 610);
         jLayeredPane1.add(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -246,6 +253,8 @@ public class MainFrame extends javax.swing.JFrame {
                 if (docInfoList.size()>0)
                 {
                     msg += "\n (" + docInfoList.size() + " KOS file(s))";
+                    model.rowColours=model.initRowColour(docInfoList.size());
+
                     for (int i=0; i<docInfoList.size(); i++)
                     {
                         DocumentInfo docInfo=docInfoList.get(i);
@@ -265,7 +274,6 @@ public class MainFrame extends javax.swing.JFrame {
                             studyDesc,
                             studyDate});
                     }
-                    model.rowColours=model.initRowColour(docInfoList.size());
                 }
                 else
                 {
@@ -278,7 +286,7 @@ public class MainFrame extends javax.swing.JFrame {
                 lblMsg.setText("No document was found for " + txtExamID.getText());
             }
         } catch (Exception e) {
-            lblMsg.setText(e.getMessage());
+            logger.error(e);
         }
     }
 
@@ -422,6 +430,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblExamID;
