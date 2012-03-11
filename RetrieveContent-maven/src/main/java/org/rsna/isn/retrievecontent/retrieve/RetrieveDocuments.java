@@ -34,8 +34,6 @@ import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.MTOMFeature;
-import org.rsna.isn.retrievecontent.rad69.RegistryErrorList;
-import org.rsna.isn.retrievecontent.rad69.RegistryResponseType;
 import org.rsna.isn.retrievecontent.rad69.RetrieveDocumentSetRequestType.DocumentRequest;
 import org.rsna.isn.retrievecontent.rad69.RetrieveDocumentSetResponseType;
 import org.rsna.isn.retrievecontent.rad69.RetrieveDocumentSetResponseType.DocumentResponse;
@@ -50,28 +48,26 @@ import org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType.
  * @version @author         Notes
  *          oyesanyf
  * 1.0.0    Wendy Zhu       Retrieve images by series
+ * 2.1.1    Wendy Zhu       Retrieve X number of images per request
  *
  */
 public class RetrieveDocuments {
 
     private static final Logger logger = Logger.getLogger(RetrieveDocuments.class);
     private static RetrieveDocumentSetResponseType imagingDocumentSourceRetrieveImagingDocumentSet;
-    private static DataHandler dh;
-    private static FileOutputStream fos;
-   // private static int totDocs;
-    private static String rsnaID;
-    private static String studyInstanceUID;
-    private static String seriesInstanceUID;
-    private static String transferSyntaxUID;
-    private static String documentUniqueId;
-    private static String status;
 
     public static int RetrieveStudy (DocumentInfo input) throws Exception {
         //One study per input
-        int numOfDocs = 0;
-        int totalDocs = 0;
-        boolean radDir = false;
-
+        int imageCounter = 0;
+        int imagesOfStudy = 0;
+        DataHandler dh;
+        FileOutputStream fos;
+        String studyInstanceUID = "";
+        String seriesInstanceUID;
+        String transferSyntaxUID;
+        String documentUniqueId;
+        String status;
+    
         RetrieveImagingDocumentSetRequestType dsRequest;
         StudyRequest studyRequest;
         List<StudyRequest> studyRequestList;
@@ -84,13 +80,26 @@ public class RetrieveDocuments {
         RetrieveDocumentSetResponseType dsResponse;
         List<DocumentResponse> responseList;
         DocumentResponse documentResponse;
-        RegistryErrorList errList;
+        //RegistryErrorList errList;
 
         try {
-            rsnaID = input.getRsnaID();
             studyInstanceUID = input.getStudyInstanceUID();
             transferSyntaxUID = input.getTransferSyntaxUID();
+            logger.info("***Start to retrieve study of [" + studyInstanceUID + "]");
 
+            String studyFolderName = "UNKNOWN";
+            if (input.getStudyDescription() != null)
+                studyFolderName = input.getStudyDescription().replaceAll("[^a-zA-Z0-9]+", "_");
+            if (input.getStudyDate() != null)
+                studyFolderName = studyFolderName + "-" + input.getStudyDate();
+            if (input.getStudyTime() != null)
+                studyFolderName = studyFolderName + "-" + studyInstanceUID;
+            //Max folder name is 256
+            if (studyFolderName.length() > 256)
+            {
+                studyFolderName = studyFolderName.substring(0, 255);
+            }
+                
             TransferSyntaxUIDList transferList = new TransferSyntaxUIDList();
             List<String> transferSyntaxUIDs = transferList.getTransferSyntaxUID();
             transferSyntaxUIDs.add(transferSyntaxUID);
@@ -117,80 +126,97 @@ public class RetrieveDocuments {
 
                     documentRequestList = seriesRequest.getDocumentRequest();
                     sopInstanceUIDList = (ArrayList<String>) input.getImages().get(seriesInstanceUID);
+                    
                     if (sopInstanceUIDList != null) {
+                        int imagesBySeries = sopInstanceUIDList.size();
+                        imagesOfStudy += imagesBySeries;
+                        int totalCounter = 0;                        
+                        int requestCounter = 0;
                         Iterator imagesItr = sopInstanceUIDList.iterator();
+                        
+                        /*
+                         * Send request with X number of images each time                         * 
+                         */                        
                         while (imagesItr.hasNext()){
                             documentUniqueId = (String) imagesItr.next();
+                            totalCounter = totalCounter + 1;
+                            requestCounter = requestCounter + 1;
+                            
+                            /*
+                             * Add image into dsRequest/studyRequestList/seriesRequestList/documentRequestList
+                             * Send the request when accumulate X number of images
+                             * After send, clear the documentRequestList
+                             */
                             docRequest = new DocumentRequest();
                             docRequest.setDocumentUniqueId(documentUniqueId);
                             docRequest.setHomeCommunityId(Configuration.HomeCommunityId);
                             docRequest.setRepositoryUniqueId(Configuration.RepositoryUniqueID);
                             documentRequestList.add(docRequest);
-                        }
+                            
+                            if (requestCounter >= Configuration.ImagesPerRequest || totalCounter >= imagesBySeries)
+                            {
+                               /*
+                                * Generate Rad69 response meta data dsResponse
+                                * Send the request and save the retrieved images
+                                */
+                                //dsResponse = new RetrieveDocumentSetResponseType();
+                                dsResponse = imagingDocumentSourceRetrieveImagingDocumentSet(dsRequest);
+                                responseList = dsResponse.getDocumentResponse();
 
-                        //Generate Rad69 response meta data dsResponse
-                        dsResponse = new RetrieveDocumentSetResponseType();
-                        try {
-                            dsResponse = imagingDocumentSourceRetrieveImagingDocumentSet(dsRequest);
-                        } catch (Exception e) {
-                            logger.info("No image returned for ID " + rsnaID + " for studyInstanceUID " + studyInstanceUID);
-                        }
+                                if (responseList.isEmpty()) {
+                                    status = dsResponse.getRegistryResponse().getStatus();
+                                    System.out.println("NO DOCUMENTS FOUND " + status);
+                                    logger.info("registry respose for this query is " + status);
+                                }
+                                else
+                                {
+                                    int returnedDocs = responseList.size();
+                                    imageCounter += returnedDocs;
 
-                        //Parse Rad69 response
-                        responseList = dsResponse.getDocumentResponse();
-                        errList = new RegistryErrorList();
+                                    documentResponse = new DocumentResponse();
+                                    String imagePath = Configuration.getImageDir().toString()  + File.separatorChar 
+                                            + input.getPatientName().replaceAll("[^a-zA-Z0-9]+", "_") + File.separatorChar + studyFolderName;
+                                    for (int i = 0; i < returnedDocs; i++) {
+                                        documentResponse = responseList.get(i);
+                                        byte[] document = documentResponse.getDocument();
 
-                        if (responseList.isEmpty()) {
-                            status = dsResponse.getRegistryResponse().getStatus();
-                            errList = dsResponse.getRegistryResponse().getRegistryErrorList();
+                                        DataSource dataSource = new ByteArrayDataSource(document, "application/octet-stream");
+                                        dh = new DataHandler(dataSource);
 
-                            String err = errList.getHighestSeverity();
-                            System.out.println("NO DOCUMENTS FOUND " + status);
-                            logger.info("registry respose for this query for " + rsnaID + " for studyInstanceUID " + studyInstanceUID + " is " + status);
+                                        File outFile = new File(imagePath);
+                                        if (!outFile.exists()) {
+                                            outFile.mkdirs();
+                                        }
 
-                            throw new Exception("No documents returned ");
-                        }
+                                        String filename = documentResponse.getDocumentUniqueId();
+                                        File dcmFile = null;
+                                        try {
+                                            dcmFile = new File(outFile, filename + ".dcm");
+                                        } catch (Exception e) {
+                                            logger.error("Error on  " + filename + ": " + e.getMessage());
+                                        }
 
-                        numOfDocs = responseList.size();
-                        totalDocs += numOfDocs;
-                        System.out.println("Number of docs: " + numOfDocs);
-                        logger.info("Number of images retuened for " + rsnaID + " for studyInstanceUID " + studyInstanceUID + " is " + numOfDocs);
-
-                        documentResponse = new DocumentResponse();
-                        String imagePath = Configuration.getImageDir().toString()  + File.separatorChar + input.getPatientName() + File.separatorChar + studyInstanceUID;
-                        for (int i = 0; i < numOfDocs; i++) {
-                            documentResponse = responseList.get(i);
-                            //String cID = documentresponse.getHomeCommunityId();
-                            byte[] document = documentResponse.getDocument();
-
-                            DataSource dataSource = new ByteArrayDataSource(document, "application/octet-stream");
-                            dh = new DataHandler(dataSource);
-
-                            File outFile = new File(imagePath);
-                            if (!outFile.exists()) {
-                              radDir = outFile.mkdirs();
-                            }
-
-                            String filename = documentResponse.getDocumentUniqueId();
-                            File dcmFile = null;
-                            try {
-                                dcmFile = new File(outFile, filename + ".dcm");
-                            } catch (Exception e) {
-                                logger.error("Error for  " + rsnaID + " for studyInstanceUID " + studyInstanceUID + " is " + e.getMessage());
-                            }
-
-                            fos = new FileOutputStream(dcmFile);
-                            dh.writeTo(fos);
-                            fos.close();
-                        }
+                                        fos = new FileOutputStream(dcmFile);
+                                        dh.writeTo(fos);
+                                        fos.close();
+                                    }  
+                                    
+                                    /*
+                                     * Clean up the request counter and image request list
+                                     */
+                                    requestCounter = 0;
+                                    documentRequestList.clear();
+                                }                              
+                            }                            
+                        }                    
                     }
                 }
             }
-            //RegistryResponseType registryResponse = new RegistryResponseType();
+            logger.info("***Complete : " + imageCounter + " out of " + imagesOfStudy + " images were retrieved");
         } catch (Exception e) {
-            logger.error("Error for  " + rsnaID + " for studyInstanceUID " + studyInstanceUID + " is " + e.getMessage());
+            logger.error("Error for studyUID[" + studyInstanceUID + "] is " + e.getMessage());
         }
-        return totalDocs;
+        return imageCounter;
     }
 
     private static RetrieveDocumentSetResponseType imagingDocumentSourceRetrieveImagingDocumentSet(org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType body) throws Exception {
@@ -200,7 +226,7 @@ public class RetrieveDocuments {
             MTOMFeature feature = new MTOMFeature();
             org.rsna.isn.retrievecontent.rad69.ImagingDocumentSourcePortType port = service.getImagingDocumentSourcePortSoap12(feature);
             Map<String, Object> ctxt = ((BindingProvider) port).getRequestContext();
-            ctxt.put("com.sun.xml.internal.ws.transport.http.client.streaming.chunk.size", 1048576);
+            ctxt.put("com.sun.xml.internal.ws.transport.http.client.streaming.chunk.size", 8096);
         //ctxt.put(com.sun.xml.internal.ws.developer.JAXWSProperties.HTTP_CLIENT_STREAMING_CHUNK_SIZE, 1048576);
             imagingDocumentSourceRetrieveImagingDocumentSet = port.imagingDocumentSourceRetrieveImagingDocumentSet(body);
         } catch (Exception e) {

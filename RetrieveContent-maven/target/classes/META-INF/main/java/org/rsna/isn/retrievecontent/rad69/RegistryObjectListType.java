@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class RegistryObjectListType {
 
-    @XmlElementRef(name = "Identifiable", namespace = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0", type = JAXBElement.class, required = false)
+    @XmlElementRef(name = "Identifiable", namespace = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0", type = JAXBElement.class)
     protected List<JAXBElement<? extends IdentifiableType>> identifiable;
 
     /**

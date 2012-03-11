@@ -47,17 +47,17 @@ public class SubscriptionType
     extends RegistryObjectType
 {
 
-    @XmlElementRef(name = "Action", namespace = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0", type = JAXBElement.class, required = false)
+    @XmlElementRef(name = "Action", namespace = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:3.0", type = JAXBElement.class)
     protected List<JAXBElement<? extends ActionType>> action;
-    @XmlAttribute(name = "selector", required = true)
+    @XmlAttribute(required = true)
     protected String selector;
-    @XmlAttribute(name = "startTime")
+    @XmlAttribute
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar startTime;
-    @XmlAttribute(name = "endTime")
+    @XmlAttribute
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar endTime;
-    @XmlAttribute(name = "notificationInterval")
+    @XmlAttribute
     protected Duration notificationInterval;
 
     /**

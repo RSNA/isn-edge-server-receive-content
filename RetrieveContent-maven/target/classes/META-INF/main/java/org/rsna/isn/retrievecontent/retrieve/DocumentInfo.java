@@ -76,11 +76,11 @@ public class DocumentInfo {
         this.studyPath = studyPath;
     }
 
-     public String getAccessionNumber() {
+    public String getAccessionNumber() {
         return accessionNumber;
     }
 
-   public void setAccessionNumber(String accessionNumber) {
+    public void setAccessionNumber(String accessionNumber) {
         this.accessionNumber = accessionNumber;
     }
 
@@ -183,7 +183,7 @@ public class DocumentInfo {
     public void setStudyPath(String studyPath) {
         this.studyPath = studyPath;
     }
-
+    
     public static <T> boolean isDuplicate(List<T> list, T e) {
         boolean hasElement = false;
         Set<T> set = new HashSet<T>();

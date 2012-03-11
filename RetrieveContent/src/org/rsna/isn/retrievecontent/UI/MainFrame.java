@@ -154,9 +154,9 @@ public class MainFrame extends javax.swing.JFrame {
         btnShow.setBounds(30, 260, 170, 23);
         jLayeredPane1.add(btnShow, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10));
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Version 2.0.1");
+        jLabel6.setText("Version 2.0.2");
         jLabel6.setBounds(820, 90, 120, 13);
         jLayeredPane1.add(jLabel6, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -181,7 +181,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel5.setBackground(new java.awt.Color(255, 255, 255));
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/rsna/isn/retrievecontent/UI/RSNA-Image-Share-bg.jpg"))); // NOI18N
-        jLabel5.setBounds(0, 0, 1030, 610);
+        jLabel5.setBounds(0, 0, 1010, 610);
         jLayeredPane1.add(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

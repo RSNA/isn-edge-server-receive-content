@@ -40,28 +40,13 @@ public class ImagingDocumentSourceService
         IMAGINGDOCUMENTSOURCESERVICE_EXCEPTION = e;
     }
 
-    public ImagingDocumentSourceService() {
-        super(__getWsdlLocation(), IMAGINGDOCUMENTSOURCESERVICE_QNAME);
-    }
-
-    public ImagingDocumentSourceService(WebServiceFeature... features) {
-        super(__getWsdlLocation(), IMAGINGDOCUMENTSOURCESERVICE_QNAME, features);
-    }
-
-    public ImagingDocumentSourceService(URL wsdlLocation) {
-        super(wsdlLocation, IMAGINGDOCUMENTSOURCESERVICE_QNAME);
-    }
-
-    public ImagingDocumentSourceService(URL wsdlLocation, WebServiceFeature... features) {
-        super(wsdlLocation, IMAGINGDOCUMENTSOURCESERVICE_QNAME, features);
-    }
-
+    
     public ImagingDocumentSourceService(URL wsdlLocation, QName serviceName) {
         super(wsdlLocation, serviceName);
     }
 
-    public ImagingDocumentSourceService(URL wsdlLocation, QName serviceName, WebServiceFeature... features) {
-        super(wsdlLocation, serviceName, features);
+    public ImagingDocumentSourceService() {
+        super(IMAGINGDOCUMENTSOURCESERVICE_WSDL_LOCATION, new QName("urn:ihe:rad:xdsi-b:2009", "ImagingDocumentSource_Service"));
     }
 
     /**
@@ -84,13 +69,6 @@ public class ImagingDocumentSourceService
     @WebEndpoint(name = "ImagingDocumentSource_Port_Soap12")
     public ImagingDocumentSourcePortType getImagingDocumentSourcePortSoap12(WebServiceFeature... features) {
         return super.getPort(new QName("urn:ihe:rad:xdsi-b:2009", "ImagingDocumentSource_Port_Soap12"), ImagingDocumentSourcePortType.class, features);
-    }
-
-    private static URL __getWsdlLocation() {
-        if (IMAGINGDOCUMENTSOURCESERVICE_EXCEPTION!= null) {
-            throw IMAGINGDOCUMENTSOURCESERVICE_EXCEPTION;
-        }
-        return IMAGINGDOCUMENTSOURCESERVICE_WSDL_LOCATION;
     }
 
 }

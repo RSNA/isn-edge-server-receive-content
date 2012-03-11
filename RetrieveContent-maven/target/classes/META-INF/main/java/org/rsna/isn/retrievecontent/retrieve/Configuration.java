@@ -56,6 +56,7 @@ public class Configuration {
     public static String AssigningAuthorityUniversalId;
     public static String AssigningAuthorityUniversalIdType;
     public static String HomeCommunityId;
+    public static int ImagesPerRequest;
 
     public Configuration() {
 
@@ -160,6 +161,7 @@ public class Configuration {
             AssigningAuthorityUniversalId = props.getProperty("AssigningAuthorityUniversalId");
             AssigningAuthorityUniversalIdType = props.getProperty("AssigningAuthorityUniversalIdType");
             HomeCommunityId = props.getProperty("HomeCommunityId");
+            ImagesPerRequest = Integer.parseInt(props.getProperty("ImagesPerRequest"));
 
             String keystorepassword = props.getProperty("keystorepassword");
             String truststorepassword = props.getProperty("truststorepassword");

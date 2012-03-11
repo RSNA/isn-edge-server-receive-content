@@ -200,7 +200,8 @@ public class RetrieveDocuments {
             MTOMFeature feature = new MTOMFeature();
             org.rsna.isn.retrievecontent.rad69.ImagingDocumentSourcePortType port = service.getImagingDocumentSourcePortSoap12(feature);
             Map<String, Object> ctxt = ((BindingProvider) port).getRequestContext();
-            ctxt.put("com.sun.xml.internal.ws.transport.http.client.streaming.chunk.size", 1048576);
+            ctxt.put("com.sun.xml.internal.ws.transport.http.client.streaming.chunk.size", 4096);
+
         //ctxt.put(com.sun.xml.internal.ws.developer.JAXWSProperties.HTTP_CLIENT_STREAMING_CHUNK_SIZE, 1048576);
             imagingDocumentSourceRetrieveImagingDocumentSet = port.imagingDocumentSourceRetrieveImagingDocumentSet(body);
         } catch (Exception e) {

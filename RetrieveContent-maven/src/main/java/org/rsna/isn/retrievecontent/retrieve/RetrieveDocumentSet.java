@@ -38,6 +38,7 @@ import org.dcm4che2.io.DicomInputStream;
  * @version @author
  * 1.0.0    oyesanyf
  * 1.1.0    Wendy Zhu   implement code to handle result from GetSubmissionSetAndContentQuery
+ * 2.1.1    Wendy Zhu   study folder name:StudyDesc-StudyDate-StudyUID
  *
  */
 public class RetrieveDocumentSet {
@@ -165,16 +166,22 @@ public class RetrieveDocumentSet {
                 ReadKOS readKOS = new ReadKOS();
                 docInfo = readKOS.listHeader(object, rsnaPatientID, documentUniqueID);
 
-                String studyDesc = "UNKNOWN";
+                String studyFolderName = "UNKNOWN";
                 if (docInfo.getStudyDescription() != null)
-                    studyDesc = docInfo.getStudyDescription().replaceAll("[^a-zA-Z0-9]+", "_");
+                    studyFolderName = docInfo.getStudyDescription().replaceAll("[^a-zA-Z0-9]+", "_");
                 if (docInfo.getStudyDate() != null)
-                    studyDesc = studyDesc + "-" + docInfo.getStudyDate();
+                    studyFolderName = studyFolderName + "-" + docInfo.getStudyDate();
                 if (docInfo.getStudyTime() != null)
-                    studyDesc = studyDesc + "-" + docInfo.getStudyTime();
-
+                    studyFolderName = studyFolderName + "-" + docInfo.getStudyInstanceUID();
+                //Max folder name is 256
+                if (studyFolderName.length() > 256)
+                {
+                    studyFolderName = studyFolderName.substring(0, 255);
+                }
+                
                 studyPath = destination + File.separatorChar + docInfo.getPatientName().replaceAll("[^a-zA-Z0-9]+", "_")
-                        + File.separatorChar + studyDesc;
+                        + File.separatorChar + studyFolderName;
+                
                 docInfo.setStudyPath(studyPath);
                 File studyDir = new File(studyPath);
                 if (!studyDir.exists()) {

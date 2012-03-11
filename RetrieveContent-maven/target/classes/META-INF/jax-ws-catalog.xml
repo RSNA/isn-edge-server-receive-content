@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://rsnaclearinghouse.com:9090/ImagingDocumentSource_Service?wsdl" uri="wsdl/rsnaclearinghouse.com_9090/ImagingDocumentSource_Service.wsdl"/>
+    <system systemId="http://rsnaclearinghouse.com:9090/ImagingDocumentSource_Service?xsd=1" uri="wsdl/rsnaclearinghouse.com_9090/ImagingDocumentSource_Service.xsd_1.xsd"/>
+    <system systemId="http://rsnaclearinghouse.com:9090/ImagingDocumentSource_Service?xsd=2" uri="wsdl/rsnaclearinghouse.com_9090/ImagingDocumentSource_Service.xsd_2.xsd"/>
+    <system systemId="http://rsnaclearinghouse.com:9090/ImagingDocumentSource_Service?xsd=6" uri="wsdl/rsnaclearinghouse.com_9090/ImagingDocumentSource_Service.xsd_6.xsd"/>
+    <system systemId="http://rsnaclearinghouse.com:9090/ImagingDocumentSource_Service?xsd=3" uri="wsdl/rsnaclearinghouse.com_9090/ImagingDocumentSource_Service.xsd_3.xsd"/>
+    <system systemId="http://rsnaclearinghouse.com:9090/ImagingDocumentSource_Service?xsd=5" uri="wsdl/rsnaclearinghouse.com_9090/ImagingDocumentSource_Service.xsd_5.xsd"/>
+    <system systemId="http://rsnaclearinghouse.com:9090/ImagingDocumentSource_Service?xsd=4" uri="wsdl/rsnaclearinghouse.com_9090/ImagingDocumentSource_Service.xsd_4.xsd"/>
+    <system systemId="http://www.w3.org/2001/xml.xsd" uri="wsdl/www.w3.org/2001/xml.xsd"/>
+</catalog>

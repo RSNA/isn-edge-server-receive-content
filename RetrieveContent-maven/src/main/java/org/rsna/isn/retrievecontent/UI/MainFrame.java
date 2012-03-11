@@ -99,19 +99,19 @@ public class MainFrame extends javax.swing.JFrame {
         lblMsg.setBounds(10, 300, 980, 40);
         jLayeredPane1.add(lblMsg, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLabel3.setFont(new java.awt.Font("Simplified Arabic", 1, 18));
+        jLabel3.setFont(new java.awt.Font("Simplified Arabic", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Retrieve Studies from Image Sharing Clearing House");
         jLabel3.setBounds(30, 80, 670, 30);
         jLayeredPane1.add(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(230, 230, 230));
-        jLabel4.setText("version 2.1.0");
+        jLabel4.setText("version 2.1.1");
         jLabel4.setBounds(820, 90, 130, 20);
         jLayeredPane1.add(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        lblExamID.setFont(new java.awt.Font("Tahoma", 1, 11));
+        lblExamID.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblExamID.setForeground(new java.awt.Color(230, 230, 230));
         lblExamID.setText("ExamID: ");
         lblExamID.setBounds(30, 150, 50, 14);
@@ -129,7 +129,7 @@ public class MainFrame extends javax.swing.JFrame {
         txtExamID.setBounds(120, 150, 223, 20);
         jLayeredPane1.add(txtExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(230, 230, 230));
         jLabel1.setText("Date of Birth:");
         jLabel1.setBounds(30, 180, 80, 14);
@@ -137,7 +137,7 @@ public class MainFrame extends javax.swing.JFrame {
         txtPassword.setBounds(120, 210, 110, 20);
         jLayeredPane1.add(txtPassword, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(230, 230, 230));
         jLabel2.setText("Password:");
         jLabel2.setBounds(30, 210, 70, 14);
@@ -174,7 +174,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane2.setBounds(10, 350, 980, 170);
         jLayeredPane1.add(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10));
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(230, 230, 230));
         jLabel6.setText("(Format: YYYYMMDD)");
         jLabel6.setBounds(240, 180, 120, 20);
