@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.1.0-SNAPSHOT.xsd">
+    <id>build</id>
+    <formats>
+	<format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+      <fileSet>
+        <directory>${project.basedir}/../RSNA/config</directory>
+        <outputDirectory>/conf</outputDirectory>
+        <includes>
+          <include>retrieve-content.properties</include>
+          <include>retrieve-log4j.properties</include>
+        </includes>
+      </fileSet>
+      <fileSet>
+        <directory>${project.basedir}/../RSNA/config</directory>
+        <outputDirectory>/</outputDirectory>
+        <includes>
+          <include>start.bat</include>
+        </includes>
+        <filtered>true</filtered>
+      </fileSet>
+    </fileSets>
+    <dependencySets>
+	<dependencySet>
+	    <outputDirectory>ext</outputDirectory>
+	    <useProjectArtifact>true</useProjectArtifact>
+	</dependencySet>
+    </dependencySets>
+    <files>
+      <file>
+        <source>${project.build.directory}/${project.build.finalName}.${project.packaging}</source>
+      </file>
+    </files>
+
+</assembly>
