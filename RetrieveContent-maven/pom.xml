@@ -141,7 +141,7 @@
         <dependency>
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
-                <version>1.1</version>
+                <version>1.1.1</version>
         </dependency>
         <dependency>
                 <groupId>dcm4che</groupId>
@@ -288,7 +288,7 @@
         <repository>
             <id>rsna-isn-thirdparty</id>
             <name>RSNA ISN Thirdparty Repo</name>
-            <url>http://rsna-nibib-maven-repository.mirtl.org:30261/nexus/content/groups/public/</url>
+            <url>https://raw.github.com/RSNA/isn-maven-repo/master/thirdparty/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
