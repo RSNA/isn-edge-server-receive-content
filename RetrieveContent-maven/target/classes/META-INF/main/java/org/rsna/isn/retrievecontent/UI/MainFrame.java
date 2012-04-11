@@ -114,7 +114,7 @@ public class MainFrame extends javax.swing.JFrame {
         lblExamID.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblExamID.setForeground(new java.awt.Color(230, 230, 230));
         lblExamID.setText("ExamID: ");
-        lblExamID.setBounds(30, 150, 50, 14);
+        lblExamID.setBounds(30, 150, 100, 14);
         jLayeredPane1.add(lblExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         btnRetrieve.setText("Retrieve Studies");
@@ -124,7 +124,7 @@ public class MainFrame extends javax.swing.JFrame {
                 btnRetrieveActionPerformed(evt);
             }
         });
-        btnRetrieve.setBounds(310, 260, 130, 23);
+        btnRetrieve.setBounds(310, 260, 160, 23);
         jLayeredPane1.add(btnRetrieve, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtExamID.setBounds(120, 150, 223, 20);
         jLayeredPane1.add(txtExamID, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -132,7 +132,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(230, 230, 230));
         jLabel1.setText("Date of Birth:");
-        jLabel1.setBounds(30, 180, 80, 14);
+        jLabel1.setBounds(30, 180, 100, 14);
         jLayeredPane1.add(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtPassword.setBounds(120, 210, 110, 20);
         jLayeredPane1.add(txtPassword, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -140,7 +140,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(230, 230, 230));
         jLabel2.setText("Password:");
-        jLabel2.setBounds(30, 210, 70, 14);
+        jLabel2.setBounds(30, 210, 100, 14);
         jLayeredPane1.add(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         txtDOB.setBounds(120, 180, 110, 20);
         jLayeredPane1.add(txtDOB, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -152,7 +152,7 @@ public class MainFrame extends javax.swing.JFrame {
                 btnShowActionPerformed(evt);
             }
         });
-        btnShow.setBounds(30, 260, 130, 23);
+        btnShow.setBounds(30, 260, 160, 23);
         jLayeredPane1.add(btnShow, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         tbStudies.setModel(new javax.swing.table.DefaultTableModel(
