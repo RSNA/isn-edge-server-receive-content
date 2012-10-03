@@ -265,7 +265,7 @@ public class RetrieveDocuments {
         try {
             Properties props = new Properties();
             File confDir = Configuration.getConfDir();
-            File propFile = new File(confDir, "scp.properties");
+            File propFile = new File(confDir, "dicom.properties");
             if (propFile.exists())
             {
                     FileInputStream in = new FileInputStream(propFile);
@@ -275,7 +275,7 @@ public class RetrieveDocuments {
             }
             else
             {
-                    InputStream in = RetrieveDocuments.class.getResourceAsStream("scp.properties");
+                    InputStream in = RetrieveDocuments.class.getResourceAsStream("dicom.properties");
 
                     byte buffer[] = IOUtils.toByteArray(in);
                     in.close();

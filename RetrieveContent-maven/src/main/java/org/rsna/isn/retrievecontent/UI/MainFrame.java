@@ -110,7 +110,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(230, 230, 230));
-        jLabel4.setText("version 2.1.1");
+        jLabel4.setText("version 2.2.0");
         jLabel4.setBounds(820, 90, 130, 20);
         jLayeredPane1.add(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
