@@ -98,13 +98,13 @@ public class RetrieveDocumentSet {
             Iterator ssItr = docList.keySet().iterator();
             while (ssItr.hasNext()) {
                 String submissionSetID = (String) ssItr.next();
-                logger.info("Get documents for submission set#"+submissionSetID+"...");
+                logger.info("Getting documents for submission set#"+submissionSetID+"...");
 
                 DocumentInfo docInfo = null;
                 Iterator<String> docItr = docList.get(submissionSetID).iterator();
                 while (docItr.hasNext()) {
                     String docID = docItr.next();
-                    logger.info("getting document with id " + docID);
+                    logger.info("docID# " + docID);
 
                     input43.setDocumentUniqueId(docID);
                     dirTemp = query43.queryDocuments(input43, RsnaPatientID);

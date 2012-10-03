@@ -30,6 +30,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.axis2.AxisFault;
+import org.openhealthtools.ihe.atna.auditor.IHEAuditor;
+import org.openhealthtools.ihe.common.ws.IHESOAP12Sender;
+import org.apache.axis2.client.Options;
 import org.openhealthtools.ihe.common.hl7v2.CX;
 import org.openhealthtools.ihe.common.hl7v2.Hl7v2Factory;
 import org.openhealthtools.ihe.xds.consumer.B_Consumer;
@@ -55,7 +58,12 @@ public class ITI43 {
     //private ArrayList<String> docList;
     private File destFile;
     private XDSDocument document;
-
+    
+    static
+    {
+        IHEAuditor.getAuditor().getConfig().setAuditorEnabled(false);
+    }
+        
     public File queryDocuments(ITI43DataType input, String rsnaPatiendID ) throws MalformedStoredQueryException, AxisFault, URISyntaxException, FileNotFoundException, IOException {
 
         String repositoryURL  = input.getRepositoryURL();
@@ -65,7 +73,6 @@ public class ITI43 {
         String repositoryUniqueId = input.getRepositoryUniqueId();
         String documentUniqueId  = input.getDocumentUniqueId();
         String downloadDIR = input.getDownloadDIR();
-       
         URI repositoryURI = null;
         try {
             repositoryURI = new URI(repositoryURL);
@@ -75,6 +82,10 @@ public class ITI43 {
         System.out.println("URI of the XDS Registry - " + repositoryURI.toString());
 
         B_Consumer c = new B_Consumer(repositoryURI);
+        IHESOAP12Sender sender = (IHESOAP12Sender) c.getSenderClient().getSender();
+        Options options = sender.getAxisServiceClient().getOptions();
+        options.setTimeOutInMilliSeconds(100000);
+        
         //AtnaAgentFactory.getAtnaAgent().setDoAudit(false);
         CX patientId = Hl7v2Factory.eINSTANCE.createCX();
 

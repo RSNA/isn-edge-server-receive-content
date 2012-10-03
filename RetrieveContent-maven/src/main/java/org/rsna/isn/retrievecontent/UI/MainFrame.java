@@ -44,14 +44,17 @@ public class MainFrame extends javax.swing.JFrame {
     private static final Logger logger = Logger.getLogger(MainFrame.class);
     private List<DocumentInfo> docInfoList;
     private String tokenID;
+    private RetrieveDocuments objRetrieve;
 
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
         this.setIconImage(java.awt.Toolkit.getDefaultToolkit().getImage("RSNA-Image-Share-icon.jpg"));
-
+        
         btnRetrieve.setEnabled(false);
         lblProgress.setVisible(false);
+        
+        objRetrieve = new RetrieveDocuments();
     }
 
     /** This method is called from within the constructor to
@@ -206,8 +209,10 @@ public class MainFrame extends javax.swing.JFrame {
         {            
             String examID=txtExamID.getText().replace("-","").toLowerCase();
             tokenID=TransHash.gen(examID, txtDOB.getText(), txtPassword.getText());
+            //tokenID="506ca492555ea57e9ea24cf563c328add9760b68367b2fc0ded838e89c36009d";
             lblMsg.setText("Querying study for exam : " + txtExamID.getText());          
-            logger.info("Query study for exam:" + tokenID);
+            logger.info("Query study for exam:" + examID);
+            System.out.println(tokenID);
             
             (new ShowThread()).start();
         } catch (Exception e) {
@@ -220,6 +225,7 @@ public class MainFrame extends javax.swing.JFrame {
         String msg="";
         try
         {
+            System.out.println("build list table...");
             CustomTableModel model = new CustomTableModel();
             tbStudies.setModel(model);
             CustomTableCellRenderer render=new CustomTableCellRenderer();
@@ -335,9 +341,9 @@ public class MainFrame extends javax.swing.JFrame {
                         for (int i=0; i<docInfoList.size(); i++)
                         {
                             DocumentInfo docInfo=docInfoList.get(i);
-                            if (studyUID == docInfo.getStudyInstanceUID()) {
+                            if (studyUID.equals(docInfo.getStudyInstanceUID())) {
                                 lblMsg.setText("Retrieving study [" + docInfo.getStudyInstanceUID() + "]...");
-                                numOfDocs += RetrieveDocuments.RetrieveStudy(docInfo);
+                                numOfDocs += objRetrieve.getStudy(docInfo);
                                 model.setRowColour(i, Color.LIGHT_GRAY);
 
                                 break;

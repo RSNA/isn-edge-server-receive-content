@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.apache.axis2.AxisFault;
+import org.openhealthtools.ihe.atna.auditor.XDSAuditor;
 import org.openhealthtools.ihe.common.ebxml._3._0.rim.ObjectRefType;
 import org.openhealthtools.ihe.common.hl7v2.CX;
 import org.openhealthtools.ihe.common.hl7v2.Hl7v2Factory;
@@ -55,7 +56,12 @@ public class ITI18 {
 
     private static final Logger logger = Logger.getLogger(ITI18.class);
     private HashMap<String, ArrayList<String>> docList;
-
+    
+    static
+    {
+        XDSAuditor.getAuditor().getConfig().setAuditorEnabled(false);
+    }
+    
     public HashMap<String, ArrayList<String>> queryDocuments(ITI18DataType input) throws MalformedStoredQueryException, AxisFault, URISyntaxException, Exception {
 
         try {
@@ -96,16 +102,14 @@ public class ITI18 {
             XDSQueryResponseType resSubmission = null;
             try {
                 resSubmission = c.invokeStoredQuery(qSubmission, true);
-                logger.info(resSubmission.getSubmissionSetResponses().size());
 
                 int numOfsets = resSubmission.getReferences().size();
-                logger.info("iti18-FindSubmissionSets-" + numOfsets + " submission sets were found");
+                logger.info("FindSubmissionSets- " + numOfsets + " submission sets were found");
                 for (int i=0; i < numOfsets; i++)
                 {
                     ArrayList<String> docIDs=new ArrayList<String>();
                     ObjectRefType setRef = (ObjectRefType) resSubmission.getReferences().get(i);
                     String submissionSetID = setRef.getId();
-                    logger.info("iti18-FindSubmissionSets-" + submissionSetID);
 
                     //Get SubmissionSets
                     GetSubmissionSetAndContentsQuery qGetSubmission = null;
@@ -120,15 +124,14 @@ public class ITI18 {
                             DocumentEntryType docDetail = ((DocumentEntryResponseType) resGetSubmission.getDocumentEntryResponses().get(n)).getDocumentEntry();
                             String docID = docDetail.getUniqueId();
                             docIDs.add(docID);
-                            logger.info("Find docID#[" + docID + "] under SubmissionSet#" + submissionSetID);
                         }
                     } catch (Exception e) {
-                        logger.error("iti18-GetSubmissionSetAndContents- " + e.getMessage());
+                        logger.error("GetSubmissionSetAndContents- " + e.getMessage());
                     }
                     docList.put(submissionSetID, docIDs);
                 }                
             } catch (Exception e) {
-                logger.error("iti18-FindSubmissionSets- " + e.getMessage());
+                logger.error("FindSubmissionSets- " + e.getMessage());
             }
         } catch (Exception e) {
             logger.error("iti18 - " + e.getMessage());

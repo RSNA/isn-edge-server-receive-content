@@ -15,6 +15,7 @@
         <includes>
           <include>retrieve-content.properties</include>
           <include>retrieve-log4j.properties</include>
+		  <include>dicom.properties</include>
         </includes>
       </fileSet>
       <fileSet>

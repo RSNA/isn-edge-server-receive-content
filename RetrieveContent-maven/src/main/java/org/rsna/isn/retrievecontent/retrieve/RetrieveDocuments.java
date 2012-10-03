@@ -24,16 +24,15 @@
 package org.rsna.isn.retrievecontent.retrieve;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Iterator;
+import java.util.*;
 import org.apache.log4j.Logger;
 import javax.activation.DataSource;
 import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.MTOMFeature;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.rsna.isn.retrievecontent.rad69.RetrieveDocumentSetRequestType.DocumentRequest;
 import org.rsna.isn.retrievecontent.rad69.RetrieveDocumentSetResponseType;
 import org.rsna.isn.retrievecontent.rad69.RetrieveDocumentSetResponseType.DocumentResponse;
@@ -41,6 +40,7 @@ import org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType;
 import org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType.StudyRequest;
 import org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType.StudyRequest.SeriesRequest;
 import org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType.TransferSyntaxUIDList;
+import org.dcm4che2.util.UIDUtils;
 
 /**
  * Retrieve image.
@@ -53,10 +53,21 @@ import org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType.
  */
 public class RetrieveDocuments {
 
-    private static final Logger logger = Logger.getLogger(RetrieveDocuments.class);
-    private static RetrieveDocumentSetResponseType imagingDocumentSourceRetrieveImagingDocumentSet;
-
-    public static int RetrieveStudy (DocumentInfo input) throws Exception {
+    static final Logger logger = Logger.getLogger(RetrieveDocuments.class);
+    
+    Map<String, String[]> pcs = new TreeMap();
+    
+    /**
+        * Construct a RetrieveDocuments.
+        * @param tmp the temp folder to store the retrieved objects,
+        * @param docsetDB the db object to keep index of retrieved submissionSetID
+        * @param siteID string of hashed rsnaID
+        */
+    public RetrieveDocuments() {
+        getPresentationContext();
+    }
+    
+    public int getStudy (DocumentInfo input) throws Exception {
         //One study per input
         int imageCounter = 0;
         int imagesOfStudy = 0;
@@ -103,6 +114,18 @@ public class RetrieveDocuments {
             TransferSyntaxUIDList transferList = new TransferSyntaxUIDList();
             List<String> transferSyntaxUIDs = transferList.getTransferSyntaxUID();
             transferSyntaxUIDs.add(transferSyntaxUID);
+            //-- set up supported transfer syntax
+            String sopClassUids[] = pcs.keySet().toArray(new String[0]);
+
+            for (String sopClassUid : sopClassUids)
+            {
+                String txUids[] = pcs.get(sopClassUid);
+                
+                for (String txUid : txUids)
+                {
+                    transferSyntaxUIDs.add(txUid);
+                }    
+            }
 
             ArrayList<String> seriesInstanceUIDList = input.getSeriesInstanceUIDList();
             if (seriesInstanceUIDList != null) {
@@ -219,20 +242,72 @@ public class RetrieveDocuments {
         return imageCounter;
     }
 
-    private static RetrieveDocumentSetResponseType imagingDocumentSourceRetrieveImagingDocumentSet(org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType body) throws Exception {
-
+    private RetrieveDocumentSetResponseType imagingDocumentSourceRetrieveImagingDocumentSet(org.rsna.isn.retrievecontent.rad69.RetrieveImagingDocumentSetRequestType body) throws Exception {
+        RetrieveDocumentSetResponseType imagingDocumentSet = null;
+        
         try {
             org.rsna.isn.retrievecontent.rad69.ImagingDocumentSourceService service = new org.rsna.isn.retrievecontent.rad69.ImagingDocumentSourceService();
             MTOMFeature feature = new MTOMFeature();
             org.rsna.isn.retrievecontent.rad69.ImagingDocumentSourcePortType port = service.getImagingDocumentSourcePortSoap12(feature);
             Map<String, Object> ctxt = ((BindingProvider) port).getRequestContext();
-            ctxt.put("com.sun.xml.internal.ws.transport.http.client.streaming.chunk.size", 8096);
+            ctxt.put("com.sun.xml.internal.ws.transport.http.client.streaming.chunk.size", 1048576);
         //ctxt.put(com.sun.xml.internal.ws.developer.JAXWSProperties.HTTP_CLIENT_STREAMING_CHUNK_SIZE, 1048576);
-            imagingDocumentSourceRetrieveImagingDocumentSet = port.imagingDocumentSourceRetrieveImagingDocumentSet(body);
+            imagingDocumentSet = port.imagingDocumentSourceRetrieveImagingDocumentSet(body);
         } catch (Exception e) {
-             logger.error("Error for is " + e.getMessage());
+             logger.error("Error on RetrieveDocumentSetResponse: " + e.getMessage());
         }
 
-        return imagingDocumentSourceRetrieveImagingDocumentSet;
+        return imagingDocumentSet;
+    }
+    
+    private void getPresentationContext()
+    {
+        try {
+            Properties props = new Properties();
+            File confDir = Configuration.getConfDir();
+            File propFile = new File(confDir, "scp.properties");
+            if (propFile.exists())
+            {
+                    FileInputStream in = new FileInputStream(propFile);
+                    props.load(in);
+
+                    in.close();
+            }
+            else
+            {
+                    InputStream in = RetrieveDocuments.class.getResourceAsStream("scp.properties");
+
+                    byte buffer[] = IOUtils.toByteArray(in);
+                    in.close();
+
+                    props.load(new ByteArrayInputStream(buffer));
+                    FileOutputStream fos = new FileOutputStream(propFile);
+                    fos.write(buffer);
+                    fos.close();
+            }
+
+            // Setup the presentation contexts
+            for (String sopClass : props.stringPropertyNames())
+            {
+                if (UIDUtils.isValidUID(sopClass))
+                {
+                    String value = props.getProperty(sopClass);
+                    String txUids[] = StringUtils.split(value, ',');
+                    for (int i = 0; i < txUids.length; i++)
+                    {
+                        String txUid = txUids[i].trim();
+
+                        if (UIDUtils.isValidUID(txUid))
+                        {
+                            txUids[i] = txUid;
+                        }
+                    }
+
+                    pcs.put(sopClass, txUids);
+                }
+            }
+        } catch (Exception e) {
+             logger.error("Error on get supported Presentation Context: " + e.getMessage());
+        }
     }
 }
