@@ -26,6 +26,7 @@ package org.rsna.isn.retrievecontent.retrieve;
 
 import java.security.MessageDigest;
 import java.math.BigInteger;
+import org.apache.commons.codec.binary.Hex;
 
 /**
  * Generate SHA-256 hash code .
@@ -45,15 +46,8 @@ public class TransHash {
         md.update(dob.getBytes("UTF8"));
         md.update(password.getBytes("UTF8"));
         
-        BigInteger tokenHash = new BigInteger(1,md.digest());
-        byte[] data = tokenHash.toByteArray();
-        char[] chars = new char[data.length * 2];
-        
-        for (int i = 0; i < data.length; i++) {
-            chars[i * 2] = HEX_DIGITS[(data[i] >> 4) & 0xf];
-            chars[i * 2 + 1] = HEX_DIGITS[data[i] & 0xf];
-        }
+        byte[] data = md.digest();
 
-        return new String(chars);
+        return String.valueOf(Hex.encodeHex(data));
     }
 }
