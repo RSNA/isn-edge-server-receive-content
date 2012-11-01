@@ -35,12 +35,25 @@ import java.math.BigInteger;
  *
  */
 public class TransHash {
+    
+    private static final char[] HEX_DIGITS = "0123456789abcdef".toCharArray();
+    
     public static String gen(String userToken, String dob, String password) throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
 
         md.update(userToken.getBytes("UTF8"));
         md.update(dob.getBytes("UTF8"));
         md.update(password.getBytes("UTF8"));
-        return (new BigInteger(1,md.digest())).toString(16);
+        
+        BigInteger tokenHash = new BigInteger(1,md.digest());
+        byte[] data = tokenHash.toByteArray();
+        char[] chars = new char[data.length * 2];
+        
+        for (int i = 0; i < data.length; i++) {
+            chars[i * 2] = HEX_DIGITS[(data[i] >> 4) & 0xf];
+            chars[i * 2 + 1] = HEX_DIGITS[data[i] & 0xf];
+        }
+
+        return new String(chars);
     }
 }
